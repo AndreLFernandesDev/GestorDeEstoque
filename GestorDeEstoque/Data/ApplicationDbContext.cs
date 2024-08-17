@@ -7,7 +7,7 @@ namespace GestorDeEstoque.Data
     {
         private IConfiguration _configuration;
 
-        public DbSet<Users> Users { get; set; }
+        public DbSet<User> Users { get; set; }
         public ApplicationDbContext(IConfiguration configuration, DbContextOptions options) : base(options)
         {
             _configuration = configuration ?? throw new ArgumentException(nameof(configuration));
