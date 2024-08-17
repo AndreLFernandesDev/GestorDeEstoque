@@ -9,7 +9,7 @@ namespace GestorDeEstoque.Models
     public Users(int id, string name, int age)
     {
       Id = id;
-      Name = name ?? throw new ArgumentNullException(nameof(name));
+      Name = name;
       Age = age;
     }
   }
