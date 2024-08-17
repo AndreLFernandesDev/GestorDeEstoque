@@ -1,5 +1,5 @@
 using Microsoft.EntityFrameworkCore;
-using GestorDeEstoque.Data;
+using GestorDeEstoque.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");

@@ -1,6 +1,6 @@
-using GestorDeEstoque.Models;
+using GestorDeEstoque.Repositories;
 
-namespace GestorDeEstoque.Data
+namespace GestorDeEstoque.Repositories
 {
     public class UserRepository : IUserRepository
     {
