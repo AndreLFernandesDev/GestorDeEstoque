@@ -1,7 +1,6 @@
-using GestorDeEstoque.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace GestorDeEstoque.Data
+namespace GestorDeEstoque.Repositories
 {
     public class ApplicationDbContext : DbContext
     {

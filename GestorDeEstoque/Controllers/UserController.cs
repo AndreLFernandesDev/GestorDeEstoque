@@ -1,4 +1,4 @@
-using GestorDeEstoque.Data;
+using GestorDeEstoque.Repositories;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GestorDeEstoque.Controllers

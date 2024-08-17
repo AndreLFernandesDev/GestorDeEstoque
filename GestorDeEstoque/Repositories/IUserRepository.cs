@@ -1,4 +1,4 @@
-namespace GestorDeEstoque.Models
+namespace GestorDeEstoque.Repositories
 {
     public interface IUserRepository
     {
