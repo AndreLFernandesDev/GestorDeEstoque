@@ -9,7 +9,7 @@ namespace GestorDeEstoque.Data
         {
             _context = context;
         }
-        public List<Users> Get()
+        public List<User> Get()
         {
             return _context.Users.ToList();
         }
