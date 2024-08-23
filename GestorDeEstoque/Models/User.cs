@@ -1,4 +1,4 @@
-namespace GestorDeEstoque.Repositories
+namespace GestorDeEstoque.Models
 {
   public class User
   {

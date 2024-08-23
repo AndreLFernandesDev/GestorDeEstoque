@@ -1,4 +1,5 @@
-using GestorDeEstoque.Repositories;
+using GestorDeEstoque.Data;
+using GestorDeEstoque.Models;
 
 namespace GestorDeEstoque.Repositories
 {
