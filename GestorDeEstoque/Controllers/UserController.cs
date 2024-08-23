@@ -5,19 +5,19 @@ namespace GestorDeEstoque.Controllers
 {
     [ApiController]
     [Route("/users")]
-    public class UserRepository : ControllerBase
+    public class UserControlers : ControllerBase
     {
-        private ApplicationDbContext _db;
+        private UserRepository _db;
 
-        public UserRepository(ApplicationDbContext db)
+        public UserControlers(UserRepository db)
         {
             _db = db ?? throw new ArgumentNullException(nameof(db));
         }
 
         [HttpGet]
-        public IActionResult GetUsers()
+        public IActionResult Get()
         {
-            var users = _db.Users.ToList();
+            var users = _db.Get();
             return Ok(users);
         }
     }
