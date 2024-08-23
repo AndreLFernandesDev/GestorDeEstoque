@@ -1,7 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using GestorDeEstoque.Data;
 using GestorDeEstoque.Repositories;
-using Npgsql;
 
 var builder = WebApplication.CreateBuilder(args);
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
@@ -23,11 +22,6 @@ if (app.Environment.IsDevelopment())
 {
     app.UseDeveloperExceptionPage();
     app.UseSwagger();
-    app.UseSwaggerUI(c =>
-    {
-        c.SwaggerEndpoint("/swagger/v1/swagger.json", "MyAPI v1");
-        c.RoutePrefix = string.Empty;
-    });
 }
 
 app.UseHttpsRedirection();
@@ -38,10 +32,7 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 // Mapeia os controladores para as rotas da API
-app.UseEndpoints(endpoints =>
-{
-    endpoints.MapControllers(); // Mapeia todas as rotas definidas nos controladores
-});
+app.MapControllers();
 
 app.Run();
 
