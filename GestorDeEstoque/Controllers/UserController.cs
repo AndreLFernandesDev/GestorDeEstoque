@@ -7,17 +7,17 @@ namespace GestorDeEstoque.Controllers
     [Route("/users")]
     public class UserControlers : ControllerBase
     {
-        private UserRepository _db;
+        private UserRepository _userRepository;
 
-        public UserControlers(UserRepository db)
+        public UserControlers(UserRepository userRepository)
         {
-            _db = db ?? throw new ArgumentNullException(nameof(db));
+            _userRepository = userRepository ?? throw new ArgumentNullException(nameof(userRepository));
         }
 
         [HttpGet]
         public IActionResult Get()
         {
-            var users = _db.Get();
+            var users = _userRepository.Get();
             return Ok(users);
         }
     }
