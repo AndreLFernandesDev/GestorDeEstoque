@@ -5,11 +5,11 @@ namespace GestorDeEstoque.Controllers
 {
     [ApiController]
     [Route("/users")]
-    public class UserControlers : ControllerBase
+    public class UserControler : ControllerBase
     {
         private UserRepository _userRepository;
 
-        public UserControlers(UserRepository userRepository)
+        public UserControler(UserRepository userRepository)
         {
             _userRepository = userRepository ?? throw new ArgumentNullException(nameof(userRepository));
         }
