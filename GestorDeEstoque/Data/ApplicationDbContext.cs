@@ -9,7 +9,7 @@ namespace GestorDeEstoque.Data
 
         public DbSet<User> Users { get; set; }
 
-        public DbSet<Produto> Produto { get; set; }
+        public DbSet<Produto> Produtos { get; set; }
 
         public ApplicationDbContext(IConfiguration configuration, DbContextOptions options) : base(options)
         {
@@ -32,6 +32,14 @@ namespace GestorDeEstoque.Data
                 .Property(p => p.Nome)
                 .IsRequired()
                 .HasMaxLength(100);
+
+            modelBuilder.Entity<Produto>()
+            .Property(p => p.Descricao)
+            .HasMaxLength(100);
+
+            modelBuilder.Entity<Produto>()
+            .Property(p => p.Preco)
+            .IsRequired();
 
             base.OnModelCreating(modelBuilder);
         }
