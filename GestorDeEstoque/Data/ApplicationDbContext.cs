@@ -10,6 +10,7 @@ namespace GestorDeEstoque.Data
         public DbSet<User> Users { get; set; }
 
         public DbSet<Produto> Produtos { get; set; }
+        public DbSet<Estoque> Estoques { get; set; }
 
         public ApplicationDbContext(IConfiguration configuration, DbContextOptions options) : base(options)
         {
@@ -41,7 +42,17 @@ namespace GestorDeEstoque.Data
             .Property(p => p.Preco)
             .IsRequired();
 
-            base.OnModelCreating(modelBuilder);
+            modelBuilder.Entity<Produto>().Property(p => p.EstoqueId).IsRequired();
+
+            modelBuilder.Entity<Produto>().Property(p => p.Quantidade).IsRequired();
+
+            // Tabela Estoque
+            modelBuilder.Entity<Estoque>().HasKey(e => e.Id);
+
+            modelBuilder.Entity<Estoque>().Property(e => e.Nome).IsRequired().HasMaxLength(100);
+
+            //Relacionamento: Estoque -> Produto
+            modelBuilder.Entity<Estoque>().HasMany(e => e.Produtos).WithOne(p => p.Estoque).HasForeignKey(p => p.EstoqueId);
         }
     }
 }
