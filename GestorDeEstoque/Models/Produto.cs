@@ -9,6 +9,7 @@ namespace GestorDeEstoque.Models
         public required decimal Quantidade { get; set; }
         public required int EstoqueId { get; set; }
         public virtual Estoque Estoque { get; set; } = null!;
+        public virtual ICollection<LogEstoque> LogsEstoque { get; set; } = [];
 
         public Produto(int id, string nome, string descricao, decimal preco, decimal quantidade, int estoqueId)
         {
