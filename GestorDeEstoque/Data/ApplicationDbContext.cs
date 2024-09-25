@@ -7,8 +7,6 @@ namespace GestorDeEstoque.Data
     {
         private IConfiguration _configuration;
 
-        public DbSet<User> Users { get; set; }
-
         public DbSet<Produto> Produtos { get; set; }
         public DbSet<Estoque> Estoques { get; set; }
 
