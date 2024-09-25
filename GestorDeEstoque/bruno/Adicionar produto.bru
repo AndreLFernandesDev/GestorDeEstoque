@@ -1,0 +1,33 @@
+meta {
+  name: Adicionar produto
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{URL_PADRAO}}/produtos
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "Nome":"Feijão Codil",
+    "Quantidade":12,
+    "Descricao":"T1",
+    "preco":19,
+    "EstoqueId":1
+  }
+}
+
+script:pre-request {
+  [
+    {
+      "nome": "arroz",
+      "descricao": "codil ",
+      "preco": 19.99,
+      "quantidade": 22,
+      "estoqueId":1
+    }
+  ]
+}
