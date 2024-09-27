@@ -9,15 +9,14 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 builder.Services.AddControllers();
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseNpgsql(connectionString));
-builder.Services.AddScoped<UserRepository>();
+builder.Services.AddScoped<ProdutoRepository>();
 
 var app = builder.Build();
 
 app.UseHttpsRedirection();
-app.UseRouting(); // Habilita o roteamento
+app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
-app.MapControllers(); // Mapeia os controladores para as rotas da API
+app.MapControllers();
 
 app.Run();
-
