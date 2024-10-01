@@ -5,5 +5,6 @@ namespace GestorDeEstoque.Repositories
     {
         Produto BuscarProdutoPorId(int id);
         bool InserirProduto(Produto novoProduto);
+        Task<IEnumerable<Produto>> ListarProdutos();
     }
 }
