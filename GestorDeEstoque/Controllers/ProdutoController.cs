@@ -12,6 +12,7 @@ namespace GestorDeEstoque.Controllers
         public ProdutoController(ProdutoRepository produtoRepository)
         {
             _produtoRepository = produtoRepository ?? throw new ArgumentNullException(nameof(produtoRepository));
+
         }
 
         [HttpGet("{id}")]
@@ -49,5 +50,25 @@ namespace GestorDeEstoque.Controllers
 
             return CreatedAtAction(nameof(BuscarProdutoPorId), new { id = produto.Id }, produto);
         }
+
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<Produto>>> ListarProdutos()
+        {
+            var produtos = await _produtoRepository.ListarProdutos();
+            try
+            {
+                if (produtos == null)
+                {
+                    return NotFound("Nenhum produto encontradi");
+                }
+                return Ok(produtos);
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, "Ocorreu erro interno ao buscar produtos");
+            }
+
+        }
+
     }
 }
