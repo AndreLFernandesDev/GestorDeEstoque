@@ -1,5 +1,6 @@
 using GestorDeEstoque.Data;
 using GestorDeEstoque.Models;
+using Microsoft.EntityFrameworkCore;
 namespace GestorDeEstoque.Repositories
 {
     public class ProdutoRepository : IProdutoRepository
@@ -24,6 +25,11 @@ namespace GestorDeEstoque.Repositories
             {
                 return false;
             }
+        }
+
+        public async Task<IEnumerable<Produto>> ListarProdutos()
+        {
+            return await _context.Produtos.ToListAsync();
         }
     }
 }
