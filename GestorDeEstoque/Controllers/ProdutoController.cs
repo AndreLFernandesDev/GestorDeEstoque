@@ -54,9 +54,9 @@ namespace GestorDeEstoque.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Produto>>> ListarProdutos()
         {
-            var produtos = await _produtoRepository.ListarProdutos();
             try
             {
+                var produtos = await _produtoRepository.ListarProdutos();
                 if (produtos == null)
                 {
                     return NotFound("Nenhum produto encontradi");
