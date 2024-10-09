@@ -56,7 +56,7 @@ namespace GestorDeEstoque.Controllers
         {
             try
             {
-                var produtos = await _produtoRepository.ListarProdutos();
+                var produtos = await _produtoRepository.ListarProdutosAync();
                 if (produtos == null)
                 {
                     return NotFound("Nenhum produto encontradi");
@@ -68,6 +68,28 @@ namespace GestorDeEstoque.Controllers
                 return StatusCode(500, "Ocorreu erro interno ao buscar produtos");
             }
 
+        }
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> AtualizarProduto(int id, [FromBody] ProdutoDTO produtoDTO)
+        {
+            if (produtoDTO == null || id <= 0)
+            {
+                return BadRequest("Dados inválidos do produto");
+            }
+            var produtoExistente = _produtoRepository.BuscarProdutoPorId(id);
+            if (produtoExistente == null)
+            {
+                return BadRequest("Produto não existe");
+            }
+            produtoExistente.Nome = produtoDTO.Nome;
+            produtoExistente.Descricao = produtoDTO.Descricao;
+            produtoExistente.Preco = produtoDTO.Preco;
+            produtoExistente.Quantidade = produtoDTO.Quantidade;
+            produtoExistente.EstoqueId = produtoDTO.EstoqueId;
+
+            await _produtoRepository.AtualizarProdutoAsync(produtoExistente);
+            return Ok(produtoExistente);
         }
 
     }
