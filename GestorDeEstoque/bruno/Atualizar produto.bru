@@ -1,0 +1,21 @@
+meta {
+  name: Atualizar produto
+  type: http
+  seq: 4
+}
+
+put {
+  url: {{URL_PADRAO}}/produtos/19
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "Nome":"TOdy",
+    "Quantidade":35,
+    "Descricao":"Achocolatado",
+    "preco":10.99,
+    "EstoqueId":1
+  }
+}
