@@ -27,9 +27,16 @@ namespace GestorDeEstoque.Repositories
             }
         }
 
-        public async Task<IEnumerable<Produto>> ListarProdutos()
+        public async Task<IEnumerable<Produto>> ListarProdutosAync()
         {
             return await _context.Produtos.ToListAsync();
+        }
+
+        public async Task<Produto> AtualizarProdutoAsync(Produto produto)
+        {
+            _context.Produtos.Update(produto);
+            await _context.SaveChangesAsync();
+            return produto;
         }
     }
 }
