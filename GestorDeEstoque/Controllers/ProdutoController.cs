@@ -92,5 +92,16 @@ namespace GestorDeEstoque.Controllers
             return Ok(produtoExistente);
         }
 
+        [HttpDelete("{id}")]
+        public IActionResult DeletarProduto(int id)
+        {
+            var produto = _produtoRepository.BuscarProdutoPorId(id);
+            if (produto == null)
+            {
+                return NotFound("Produto não encontrado");
+            }
+            _produtoRepository.RemoverProduto(id);
+            return Ok(new { mensagem = "Produto deletado" });
+        }
     }
 }

@@ -38,5 +38,17 @@ namespace GestorDeEstoque.Repositories
             await _context.SaveChangesAsync();
             return produto;
         }
+
+        public bool RemoverProduto(int id)
+        {
+            var produto = _context.Produtos.Find(id);
+            if (produto == null)
+            {
+                return false;
+            }
+            _context.Remove(produto);
+            _context.SaveChanges();
+            return true;
+        }
     }
 }

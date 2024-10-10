@@ -7,5 +7,6 @@ namespace GestorDeEstoque.Repositories
         bool InserirProduto(Produto novoProduto);
         Task<IEnumerable<Produto>> ListarProdutosAync();
         Task<Produto> AtualizarProdutoAsync(Produto produto);
+        bool RemoverProduto(int id);
     }
 }
