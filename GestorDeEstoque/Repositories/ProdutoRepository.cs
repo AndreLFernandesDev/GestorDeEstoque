@@ -10,15 +10,15 @@ namespace GestorDeEstoque.Repositories
         {
             _context = context;
         }
-        public Produto BuscarProdutoPorId(int id)
+        public async Task<Produto> BuscarProdutoPorIdAsync(int id)
         {
-            return _context.Produtos.Find(id);
+            return await _context.Produtos.FindAsync(id);
         }
-        public bool InserirProduto(Produto novoProduto)
+        public async Task<bool> InserirProdutoAsync(Produto novoProduto)
         {
             try
             {
-                _context.Add(novoProduto);
+                await _context.AddAsync(novoProduto);
                 return _context.SaveChanges() > 0;
             }
             catch
@@ -27,7 +27,7 @@ namespace GestorDeEstoque.Repositories
             }
         }
 
-        public async Task<IEnumerable<Produto>> ListarProdutosAync()
+        public async Task<IEnumerable<Produto>> ListarProdutosAsync()
         {
             return await _context.Produtos.ToListAsync();
         }
@@ -39,9 +39,9 @@ namespace GestorDeEstoque.Repositories
             return produto;
         }
 
-        public bool RemoverProduto(int id)
+        public async Task<bool> RemoverProdutoAsync(int id)
         {
-            var produto = _context.Produtos.Find(id);
+            var produto = await _context.Produtos.FindAsync(id);
             if (produto == null)
             {
                 return false;

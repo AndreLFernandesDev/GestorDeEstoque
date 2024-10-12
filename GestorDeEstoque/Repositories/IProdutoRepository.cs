@@ -3,10 +3,10 @@ namespace GestorDeEstoque.Repositories
 {
     public interface IProdutoRepository
     {
-        Produto BuscarProdutoPorId(int id);
-        bool InserirProduto(Produto novoProduto);
-        Task<IEnumerable<Produto>> ListarProdutosAync();
+        Task<Produto> BuscarProdutoPorIdAsync(int id);
+        Task<bool> InserirProdutoAsync(Produto novoProduto);
+        Task<IEnumerable<Produto>> ListarProdutosAsync();
         Task<Produto> AtualizarProdutoAsync(Produto produto);
-        bool RemoverProduto(int id);
+        Task<bool> RemoverProdutoAsync(int id);
     }
 }
