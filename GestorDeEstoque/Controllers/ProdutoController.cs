@@ -16,9 +16,9 @@ namespace GestorDeEstoque.Controllers
         }
 
         [HttpGet("{id}")]
-        public IActionResult BuscarProdutoPorId(int id)
+        public async Task<IActionResult> BuscarProdutoPorId(int id)
         {
-            var produto = _produtoRepository.BuscarProdutoPorId(id);
+            var produto = await _produtoRepository.BuscarProdutoPorIdAsync(id);
             if (produto == null)
             {
                 return NotFound();
@@ -31,7 +31,7 @@ namespace GestorDeEstoque.Controllers
 
 
         [HttpPost]
-        public IActionResult InserirProduto([FromBody] ProdutoDTO novoProdutoDTO)
+        public async Task<IActionResult> InserirProduto([FromBody] ProdutoDTO novoProdutoDTO)
         {
             if (!ModelState.IsValid)
             {
@@ -46,7 +46,7 @@ namespace GestorDeEstoque.Controllers
                 Quantidade = novoProdutoDTO.Quantidade,
                 EstoqueId = novoProdutoDTO.EstoqueId
             };
-            _produtoRepository.InserirProduto(produto);
+            await _produtoRepository.InserirProdutoAsync(produto);
 
             return CreatedAtAction(nameof(BuscarProdutoPorId), new { id = produto.Id }, produto);
         }
@@ -56,7 +56,7 @@ namespace GestorDeEstoque.Controllers
         {
             try
             {
-                var produtos = await _produtoRepository.ListarProdutosAync();
+                var produtos = await _produtoRepository.ListarProdutosAsync();
                 if (produtos == null)
                 {
                     return NotFound("Nenhum produto encontradi");
@@ -77,7 +77,7 @@ namespace GestorDeEstoque.Controllers
             {
                 return BadRequest("Dados inválidos do produto");
             }
-            var produtoExistente = _produtoRepository.BuscarProdutoPorId(id);
+            var produtoExistente = await _produtoRepository.BuscarProdutoPorIdAsync(id);
             if (produtoExistente == null)
             {
                 return BadRequest("Produto não existe");
@@ -93,14 +93,14 @@ namespace GestorDeEstoque.Controllers
         }
 
         [HttpDelete("{id}")]
-        public IActionResult DeletarProduto(int id)
+        public async Task<IActionResult> DeletarProduto(int id)
         {
-            var produto = _produtoRepository.BuscarProdutoPorId(id);
+            var produto = await _produtoRepository.BuscarProdutoPorIdAsync(id);
             if (produto == null)
             {
                 return NotFound("Produto não encontrado");
             }
-            _produtoRepository.RemoverProduto(id);
+            await _produtoRepository.RemoverProdutoAsync(id);
             return Ok(new { mensagem = "Produto deletado" });
         }
     }
