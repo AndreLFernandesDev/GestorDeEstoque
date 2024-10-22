@@ -1,18 +1,11 @@
 namespace GestorDeEstoque.Models
 {
-    public class LogEstoque
+    public class LogEstoque(int produtoId, decimal quantidade)
     {
         public int Id { get; set; }
-        public int Quantidade { get; set; }
-        public DateTime Data { get; set; }
-        public int ProdutoId { get; set; }
+        public decimal Quantidade { get; set; } = quantidade;
+        public DateTime Data { get; set; } = DateTime.UtcNow;
+        public int ProdutoId { get; set; } = produtoId;
         public virtual Produto Produto { get; set; } = null!;
-
-        public LogEstoque(int id, int quantidade, DateTime data)
-        {
-            Id = id;
-            Quantidade = quantidade;
-            Data = data;
-        }
     }
 }
