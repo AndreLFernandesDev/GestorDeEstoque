@@ -9,7 +9,7 @@ namespace GestorDeEstoque.Data
 
         public DbSet<Produto> Produtos { get; set; }
         public DbSet<Estoque> Estoques { get; set; }
-
+        public DbSet<LogEstoque> LogsEstoques { get; set; }
         public ApplicationDbContext(IConfiguration configuration, DbContextOptions options) : base(options)
         {
             _configuration = configuration ?? throw new ArgumentException(nameof(configuration));
