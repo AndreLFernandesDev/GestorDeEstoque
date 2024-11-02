@@ -6,7 +6,6 @@ namespace GestorDeEstoque.Models
         public required string Nome { get; set; }
         public virtual ICollection<Produto> Produtos { get; set; } = [];
 
-
         public Estoque(int id, string nome)
         {
             Id = id;
