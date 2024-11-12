@@ -50,7 +50,7 @@ namespace GestorDeEstoque.Data
             modelBuilder.Entity<Estoque>().Property(e => e.Nome).IsRequired().HasMaxLength(100);
 
             //Relacionamento: Estoque -> Produto
-            modelBuilder.Entity<Estoque>().HasMany(e => e.Produtos).WithOne(p => p.Estoque).HasForeignKey(p => p.EstoqueId);
+            modelBuilder.Entity<Estoque>().HasMany(e => e.Produtos).WithMany(p => p.Estoques);
 
             //Tabela LogEstoque
             modelBuilder.Entity<LogEstoque>().HasKey(l => l.Id);
