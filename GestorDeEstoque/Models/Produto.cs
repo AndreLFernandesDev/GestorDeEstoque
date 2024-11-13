@@ -8,7 +8,7 @@ namespace GestorDeEstoque.Models
         public decimal Preco { get; set; }
         public decimal Quantidade { get; set; }
         public int EstoqueId { get; set; }
-        public virtual ICollection<Estoque> Estoques { get; set; } = [];
         public virtual ICollection<LogEstoque> LogsEstoque { get; set; } = [];
+        public virtual ICollection<ProdutoEstoque> ProdutosEstoques { get; set; } = [];
     }
 }
