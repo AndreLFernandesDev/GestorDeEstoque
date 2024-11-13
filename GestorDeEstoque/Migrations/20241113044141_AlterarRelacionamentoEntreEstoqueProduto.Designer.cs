@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace GestorDeEstoque.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20241112001208_MudarRelacionamentoEntreEstoqueEProduto")]
-    partial class MudarRelacionamentoEntreEstoqueEProduto
+    [Migration("20241113044141_AlterarRelacionamentoEntreEstoqueProduto")]
+    partial class AlterarRelacionamentoEntreEstoqueProduto
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -24,21 +24,6 @@ namespace GestorDeEstoque.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
-
-            modelBuilder.Entity("EstoqueProduto", b =>
-                {
-                    b.Property<int>("EstoquesId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("ProdutosId")
-                        .HasColumnType("integer");
-
-                    b.HasKey("EstoquesId", "ProdutosId");
-
-                    b.HasIndex("ProdutosId");
-
-                    b.ToTable("EstoqueProduto");
-                });
 
             modelBuilder.Entity("GestorDeEstoque.Models.Estoque", b =>
                 {
@@ -111,22 +96,27 @@ namespace GestorDeEstoque.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("EstoqueId");
+
                     b.ToTable("Produtos");
                 });
 
-            modelBuilder.Entity("EstoqueProduto", b =>
+            modelBuilder.Entity("GestorDeEstoque.Models.ProdutoEstoque", b =>
                 {
-                    b.HasOne("GestorDeEstoque.Models.Estoque", null)
-                        .WithMany()
-                        .HasForeignKey("EstoquesId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.Property<int>("ProdutoId")
+                        .HasColumnType("integer");
 
-                    b.HasOne("GestorDeEstoque.Models.Produto", null)
-                        .WithMany()
-                        .HasForeignKey("ProdutosId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.Property<int>("EstoqueId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("Quantidade")
+                        .HasColumnType("integer");
+
+                    b.HasKey("ProdutoId", "EstoqueId");
+
+                    b.HasIndex("EstoqueId");
+
+                    b.ToTable("ProdutoEstoque");
                 });
 
             modelBuilder.Entity("GestorDeEstoque.Models.LogEstoque", b =>
@@ -142,7 +132,44 @@ namespace GestorDeEstoque.Migrations
 
             modelBuilder.Entity("GestorDeEstoque.Models.Produto", b =>
                 {
+                    b.HasOne("GestorDeEstoque.Models.Estoque", null)
+                        .WithMany("Produtos")
+                        .HasForeignKey("EstoqueId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("GestorDeEstoque.Models.ProdutoEstoque", b =>
+                {
+                    b.HasOne("GestorDeEstoque.Models.Estoque", "Estoque")
+                        .WithMany("ProdutosEstoques")
+                        .HasForeignKey("EstoqueId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("GestorDeEstoque.Models.Produto", "Produto")
+                        .WithMany("ProdutosEstoques")
+                        .HasForeignKey("ProdutoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Estoque");
+
+                    b.Navigation("Produto");
+                });
+
+            modelBuilder.Entity("GestorDeEstoque.Models.Estoque", b =>
+                {
+                    b.Navigation("Produtos");
+
+                    b.Navigation("ProdutosEstoques");
+                });
+
+            modelBuilder.Entity("GestorDeEstoque.Models.Produto", b =>
+                {
                     b.Navigation("LogsEstoque");
+
+                    b.Navigation("ProdutosEstoques");
                 });
 #pragma warning restore 612, 618
         }

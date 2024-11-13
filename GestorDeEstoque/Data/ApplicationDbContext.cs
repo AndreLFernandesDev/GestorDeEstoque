@@ -40,17 +40,12 @@ namespace GestorDeEstoque.Data
             .Property(p => p.Preco)
             .IsRequired();
 
-            modelBuilder.Entity<Produto>().Property(p => p.EstoqueId).IsRequired();
-
             modelBuilder.Entity<Produto>().Property(p => p.Quantidade).IsRequired();
 
             // Tabela Estoque
             modelBuilder.Entity<Estoque>().HasKey(e => e.Id);
 
             modelBuilder.Entity<Estoque>().Property(e => e.Nome).IsRequired().HasMaxLength(100);
-
-            //Relacionamento: Estoque -> Produto
-            modelBuilder.Entity<Estoque>().HasMany(e => e.Produtos).WithMany(p => p.Estoques);
 
             //Tabela LogEstoque
             modelBuilder.Entity<LogEstoque>().HasKey(l => l.Id);
@@ -62,6 +57,14 @@ namespace GestorDeEstoque.Data
             //Relacionamento: LogEstoque -> Produto
             modelBuilder.Entity<LogEstoque>().HasOne(l => l.Produto).WithMany(p => p.LogsEstoque).HasForeignKey(l => l.ProdutoId);
 
+            //Tabela ProdutoEstoque
+            modelBuilder.Entity<ProdutoEstoque>().HasKey(pe => new { pe.ProdutoId, pe.EstoqueId });
+
+            modelBuilder.Entity<ProdutoEstoque>().HasOne(pe => pe.Produto).WithMany(p => p.ProdutosEstoques).HasForeignKey(pe => pe.ProdutoId);
+
+            modelBuilder.Entity<ProdutoEstoque>().HasOne(pe => pe.Estoque).WithMany(e => e.ProdutosEstoques).HasForeignKey(pe => pe.EstoqueId);
+
+            modelBuilder.Entity<ProdutoEstoque>().Property(pe => pe.Quantidade).IsRequired();
         }
     }
 }
