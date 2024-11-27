@@ -1,12 +1,13 @@
 using GestorDeEstoque.Models;
+using GestorDeEstoque.DTOs;
 namespace GestorDeEstoque.Repositories
 {
     public interface IProdutoRepository
     {
-        Task<Produto> BuscarProdutoPorIdAsync(int id);
+        Task<ProdutoDTO> BuscarProdutoPorIdAsync(int idProduto, int idEstoque);
         Task<bool> InserirProdutoAsync(Produto novoProduto);
-        Task<IEnumerable<Produto>> ListarProdutosAsync();
-        Task<Produto> AtualizarProdutoAsync(Produto produto);
+        Task<IEnumerable<ProdutoDTO>> ListarProdutosAsync(int idEstoque);
+        Task<Produto> AtualizarProdutoAsync(int idProduto, Produto produtoAtualizado, int idEstoque);
         Task<bool> RemoverProdutoAsync(int id);
     }
 }
