@@ -10,6 +10,6 @@ namespace GestorDeEstoque.Models
         public int EstoqueId { get; set; }
         public Estoque? Estoque { get; set; }
 
-        public int Quantidade { get; set; }
+        public decimal Quantidade { get; set; }
     }
 }
