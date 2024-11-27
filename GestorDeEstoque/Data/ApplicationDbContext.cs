@@ -10,9 +10,15 @@ namespace GestorDeEstoque.Data
         public DbSet<Produto> Produtos { get; set; }
         public DbSet<Estoque> Estoques { get; set; }
         public DbSet<LogEstoque> LogsEstoques { get; set; }
+        public DbSet<ProdutoEstoque> ProdutosEstoques { get; set; }
+
         public ApplicationDbContext(IConfiguration configuration, DbContextOptions options) : base(options)
         {
             _configuration = configuration ?? throw new ArgumentException(nameof(configuration));
+            Produtos = Set<Produto>();
+            Estoques = Set<Estoque>();
+            LogsEstoques = Set<LogEstoque>();
+            ProdutosEstoques = Set<ProdutoEstoque>();
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -40,8 +46,6 @@ namespace GestorDeEstoque.Data
             .Property(p => p.Preco)
             .IsRequired();
 
-            modelBuilder.Entity<Produto>().Property(p => p.Quantidade).IsRequired();
-
             // Tabela Estoque
             modelBuilder.Entity<Estoque>().HasKey(e => e.Id);
 
@@ -53,6 +57,8 @@ namespace GestorDeEstoque.Data
             modelBuilder.Entity<LogEstoque>().Property(l => l.Quantidade).IsRequired();
 
             modelBuilder.Entity<LogEstoque>().Property(l => l.Data).IsRequired();
+
+            modelBuilder.Entity<LogEstoque>().Property(l => l.IdEstoque).IsRequired();
 
             //Relacionamento: LogEstoque -> Produto
             modelBuilder.Entity<LogEstoque>().HasOne(l => l.Produto).WithMany(p => p.LogsEstoque).HasForeignKey(l => l.ProdutoId);
