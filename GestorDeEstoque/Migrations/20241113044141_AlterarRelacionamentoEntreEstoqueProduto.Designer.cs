@@ -3,6 +3,7 @@ using System;
 using GestorDeEstoque.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace GestorDeEstoque.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241113044141_AlterarRelacionamentoEntreEstoqueProduto")]
+    partial class AlterarRelacionamentoEntreEstoqueProduto
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -51,9 +54,6 @@ namespace GestorDeEstoque.Migrations
                     b.Property<DateTime>("Data")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<int>("IdEstoque")
-                        .HasColumnType("integer");
-
                     b.Property<int>("ProdutoId")
                         .HasColumnType("integer");
 
@@ -80,6 +80,9 @@ namespace GestorDeEstoque.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)");
 
+                    b.Property<int>("EstoqueId")
+                        .HasColumnType("integer");
+
                     b.Property<string>("Nome")
                         .IsRequired()
                         .HasMaxLength(100)
@@ -88,7 +91,12 @@ namespace GestorDeEstoque.Migrations
                     b.Property<decimal>("Preco")
                         .HasColumnType("numeric");
 
+                    b.Property<decimal>("Quantidade")
+                        .HasColumnType("numeric");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("EstoqueId");
 
                     b.ToTable("Produtos");
                 });
@@ -101,14 +109,14 @@ namespace GestorDeEstoque.Migrations
                     b.Property<int>("EstoqueId")
                         .HasColumnType("integer");
 
-                    b.Property<decimal>("Quantidade")
-                        .HasColumnType("numeric");
+                    b.Property<int>("Quantidade")
+                        .HasColumnType("integer");
 
                     b.HasKey("ProdutoId", "EstoqueId");
 
                     b.HasIndex("EstoqueId");
 
-                    b.ToTable("ProdutosEstoques");
+                    b.ToTable("ProdutoEstoque");
                 });
 
             modelBuilder.Entity("GestorDeEstoque.Models.LogEstoque", b =>
@@ -120,6 +128,15 @@ namespace GestorDeEstoque.Migrations
                         .IsRequired();
 
                     b.Navigation("Produto");
+                });
+
+            modelBuilder.Entity("GestorDeEstoque.Models.Produto", b =>
+                {
+                    b.HasOne("GestorDeEstoque.Models.Estoque", null)
+                        .WithMany("Produtos")
+                        .HasForeignKey("EstoqueId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("GestorDeEstoque.Models.ProdutoEstoque", b =>
@@ -143,6 +160,8 @@ namespace GestorDeEstoque.Migrations
 
             modelBuilder.Entity("GestorDeEstoque.Models.Estoque", b =>
                 {
+                    b.Navigation("Produtos");
+
                     b.Navigation("ProdutosEstoques");
                 });
 

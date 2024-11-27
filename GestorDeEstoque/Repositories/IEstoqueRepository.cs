@@ -3,6 +3,6 @@ namespace GestorDeEstoque.Repositories
 {
     public interface IEstoqueRepository
     {
-        public Task<Produto> AtualizarQuantidadeProdutoAsync(int idProduto, decimal quantidade);
+        public Task<ProdutoEstoque> AtualizarQuantidadeProdutoAsync(int idProduto, decimal quantidade, int idEstoque);
     }
 }

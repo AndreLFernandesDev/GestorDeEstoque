@@ -3,6 +3,7 @@ using System;
 using GestorDeEstoque.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace GestorDeEstoque.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241121021613_DeletadoPropriedadeQuantidade")]
+    partial class DeletadoPropriedadeQuantidade
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -50,9 +53,6 @@ namespace GestorDeEstoque.Migrations
 
                     b.Property<DateTime>("Data")
                         .HasColumnType("timestamp with time zone");
-
-                    b.Property<int>("IdEstoque")
-                        .HasColumnType("integer");
 
                     b.Property<int>("ProdutoId")
                         .HasColumnType("integer");
