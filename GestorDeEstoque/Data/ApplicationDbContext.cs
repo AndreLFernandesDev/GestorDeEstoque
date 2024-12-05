@@ -58,7 +58,7 @@ namespace GestorDeEstoque.Data
 
             modelBuilder.Entity<LogEstoque>().Property(l => l.Data).IsRequired();
 
-            modelBuilder.Entity<LogEstoque>().Property(l => l.IdEstoque).IsRequired();
+            modelBuilder.Entity<LogEstoque>().Property(l => l.EstoqueId).IsRequired();
 
             //Relacionamento: LogEstoque -> Produto
             modelBuilder.Entity<LogEstoque>().HasOne(l => l.Produto).WithMany(p => p.LogsEstoque).HasForeignKey(l => l.ProdutoId);

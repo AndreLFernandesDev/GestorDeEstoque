@@ -51,7 +51,7 @@ namespace GestorDeEstoque.Migrations
                     b.Property<DateTime>("Data")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<int>("IdEstoque")
+                    b.Property<int>("EstoqueId")
                         .HasColumnType("integer");
 
                     b.Property<int>("ProdutoId")
@@ -61,6 +61,8 @@ namespace GestorDeEstoque.Migrations
                         .HasColumnType("numeric");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("EstoqueId");
 
                     b.HasIndex("ProdutoId");
 
@@ -113,11 +115,19 @@ namespace GestorDeEstoque.Migrations
 
             modelBuilder.Entity("GestorDeEstoque.Models.LogEstoque", b =>
                 {
+                    b.HasOne("GestorDeEstoque.Models.Estoque", "Estoque")
+                        .WithMany()
+                        .HasForeignKey("EstoqueId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("GestorDeEstoque.Models.Produto", "Produto")
                         .WithMany("LogsEstoque")
                         .HasForeignKey("ProdutoId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Estoque");
 
                     b.Navigation("Produto");
                 });
