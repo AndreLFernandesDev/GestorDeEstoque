@@ -10,7 +10,7 @@ namespace GestorDeEstoque.Repositories
 
         public async Task<IEnumerable<LogEstoque>> ObterLogsAsync(int idEstoque)
         {
-            return await _context.LogsEstoques.Where(le => le.IdEstoque == idEstoque).ToListAsync();
+            return await _context.LogsEstoques.Where(le => le.EstoqueId == idEstoque).ToListAsync();
         }
 
         public async Task<LogEstoque> RegistrarLogEstoqueAsync(int produtoId, decimal quantidadeAtual, int estoqueId)

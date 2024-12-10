@@ -1,6 +1,7 @@
 using GestorDeEstoque.Data;
 using GestorDeEstoque.DTOs;
 using GestorDeEstoque.Models;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 namespace GestorDeEstoque.Repositories
 {
@@ -11,7 +12,7 @@ namespace GestorDeEstoque.Repositories
         {
             _context = context;
         }
-        public async Task<ProdutoDTO> BuscarProdutoPorIdAsync(int idProduto, int idEstoque)
+        public async Task<ProdutoDTO> BuscaPorIdProdutoEhIdEstoqueAsync(int idProduto, int idEstoque)
         {
             var produto = await _context.Produtos.FirstOrDefaultAsync(p => p.Id == idProduto);
             var produtoQuantidade = await _context.ProdutosEstoques.FirstOrDefaultAsync(pq => pq.ProdutoId == idProduto && pq.EstoqueId == idEstoque);
@@ -61,21 +62,23 @@ namespace GestorDeEstoque.Repositories
             return produtos;
         }
 
-        public async Task<Produto> AtualizarProdutoAsync(int idProduto, Produto produtoAtualizado, int estoqueId)
+        public async Task AtualizarProdutoAsync(int idProduto, Produto produtoAtualizado, int estoqueId)
         {
-            var produto = await _context.Produtos.FirstOrDefaultAsync(p => p.Id == idProduto);
-            var estoque = await _context.Estoques.FirstOrDefaultAsync(e => e.Id == estoqueId);
-
-            if (produto == null || estoque == null)
+            var produtoEstoque = await _context.ProdutosEstoques.FirstOrDefaultAsync(pe => pe.ProdutoId == idProduto && pe.EstoqueId == estoqueId);
+            if (produtoEstoque == null)
             {
-                throw new InvalidOperationException("Produto ou estoque não encontrados.");
+                throw new InvalidOperationException("Produto não encontrado no estoque especificado");
+            }
+            var produto = await _context.Produtos.FirstOrDefaultAsync(P => P.Id == idProduto);
+            if (produto == null)
+            {
+                throw new InvalidOperationException("Produto não encontrado");
             }
             produto.Nome = produtoAtualizado.Nome;
             produto.Descricao = produtoAtualizado.Descricao;
             produto.Preco = produtoAtualizado.Preco;
 
             await _context.SaveChangesAsync();
-            return produtoAtualizado;
         }
 
         public async Task<bool> RemoverProdutoAsync(int id)

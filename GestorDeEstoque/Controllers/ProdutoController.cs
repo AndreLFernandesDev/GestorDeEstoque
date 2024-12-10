@@ -24,7 +24,7 @@ namespace GestorDeEstoque.Controllers
         {
             try
             {
-                var produto = await _produtoRepository.BuscarProdutoPorIdAsync(produtoId, estoqueId);
+                var produto = await _produtoRepository.BuscaPorIdProdutoEhIdEstoqueAsync(produtoId, estoqueId);
                 if (produto == null)
                 {
                     return NotFound(new { mensagem = "Produto ou estoque não encontrado" });
@@ -79,8 +79,8 @@ namespace GestorDeEstoque.Controllers
             }
         }
 
-        [HttpGet("estoqueId/{estoqueId}")]
-        public async Task<ActionResult<IEnumerable<ProdutoDTO>>> ListarProdutos(int estoqueId)
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<ProdutoDTO>>> ListarProdutos([FromQuery] int estoqueId)
         {
             try
             {
@@ -103,18 +103,12 @@ namespace GestorDeEstoque.Controllers
         {
             try
             {
-                if (produtoAtualizado == null || idProduto <= 0 || idEstoque <= 0)
+                if (produtoAtualizado == null)
                 {
                     return BadRequest("Dados inválidos do produto");
                 }
-                var produtoExistente = await _produtoRepository.BuscarProdutoPorIdAsync(idProduto, idEstoque);
-                if (produtoExistente == null)
-                {
-                    return NotFound("Produto não existe");
-                }
-
                 await _produtoRepository.AtualizarProdutoAsync(idProduto, produtoAtualizado, idEstoque);
-                return Ok(produtoAtualizado);
+                return Ok();
             }
             catch (Exception ex)
             {
@@ -129,7 +123,7 @@ namespace GestorDeEstoque.Controllers
             {
                 try
                 {
-                    var quantidade = await _produtoEstoqueRepository.BuscarQuantidadePorIdAsync(id, idEstoque);
+                    var quantidade = await _produtoEstoqueRepository.BuscarQuantidadePorIdEstoqueEhIdProdutoAsync(id, idEstoque);
                     if (quantidade == null)
                     {
                         return NotFound("Produto não encontrado");
