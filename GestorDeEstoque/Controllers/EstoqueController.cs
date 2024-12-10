@@ -19,13 +19,13 @@ namespace GestorDeEstoque.Controllers
             _logRepository = logRepository;
         }
 
-        [HttpPut("{idProduto}/idEstoque/{idEstoque}")]
-        public async Task<ActionResult<Produto>> AtualizarQuantidadeProdutoAsync(int idProduto, [FromBody] EstoqueDTO estoqueDTO, int idEstoque)
+        [HttpPut("{idEstoque}/idProduto/{idProduto}")]
+        public async Task<ActionResult<Produto>> AtualizarQuantidadeProdutoAsync(int idEstoque, [FromBody] EstoqueDTO estoqueDTO, int idProduto)
         {
             using var transaction = await _context.Database.BeginTransactionAsync();
             try
             {
-                await _estoqueRepository.AtualizarQuantidadeProdutoAsync(idProduto, estoqueDTO.Quantidade, idEstoque);
+                await _estoqueRepository.AtualizarQuantidadeProdutoAsync(idEstoque, estoqueDTO.Quantidade, idProduto);
                 await _logRepository.RegistrarLogEstoqueAsync(idProduto, estoqueDTO.Quantidade, idEstoque);
                 await _context.SaveChangesAsync();
                 await transaction.CommitAsync();

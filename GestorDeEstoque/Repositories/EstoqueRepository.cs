@@ -10,18 +10,18 @@ namespace GestorDeEstoque.Repositories
         {
             _context = context;
         }
-        public async Task<ProdutoEstoque> AtualizarQuantidadeProdutoAsync(int idProduto, decimal quantidade, int idEstoque)
+        public async Task<ProdutoEstoque> AtualizarQuantidadeProdutoAsync(int idEstoque, decimal quantidade, int idProduto)
         {
-            var quantidadeProduto = await _context.ProdutosEstoques.FirstOrDefaultAsync(qp => qp.ProdutoId == idProduto && qp.EstoqueId == idEstoque);
-            if (quantidadeProduto == null)
+            var produtoEstoque = await _context.ProdutosEstoques.FirstOrDefaultAsync(qp => qp.ProdutoId == idProduto && qp.EstoqueId == idEstoque);
+            if (produtoEstoque == null)
             {
                 throw new InvalidOperationException("Produto não encontrado.");
             }
             else
             {
-                quantidadeProduto.Quantidade += quantidade;
+                produtoEstoque.Quantidade += quantidade;
                 _context.SaveChanges();
-                return quantidadeProduto;
+                return produtoEstoque;
             }
         }
     }
