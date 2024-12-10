@@ -10,9 +10,15 @@ namespace GestorDeEstoque.Data
         public DbSet<Produto> Produtos { get; set; }
         public DbSet<Estoque> Estoques { get; set; }
         public DbSet<LogEstoque> LogsEstoques { get; set; }
+        public DbSet<ProdutoEstoque> ProdutosEstoques { get; set; }
+
         public ApplicationDbContext(IConfiguration configuration, DbContextOptions options) : base(options)
         {
             _configuration = configuration ?? throw new ArgumentException(nameof(configuration));
+            Produtos = Set<Produto>();
+            Estoques = Set<Estoque>();
+            LogsEstoques = Set<LogEstoque>();
+            ProdutosEstoques = Set<ProdutoEstoque>();
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -40,17 +46,10 @@ namespace GestorDeEstoque.Data
             .Property(p => p.Preco)
             .IsRequired();
 
-            modelBuilder.Entity<Produto>().Property(p => p.EstoqueId).IsRequired();
-
-            modelBuilder.Entity<Produto>().Property(p => p.Quantidade).IsRequired();
-
             // Tabela Estoque
             modelBuilder.Entity<Estoque>().HasKey(e => e.Id);
 
             modelBuilder.Entity<Estoque>().Property(e => e.Nome).IsRequired().HasMaxLength(100);
-
-            //Relacionamento: Estoque -> Produto
-            modelBuilder.Entity<Estoque>().HasMany(e => e.Produtos).WithOne(p => p.Estoque).HasForeignKey(p => p.EstoqueId);
 
             //Tabela LogEstoque
             modelBuilder.Entity<LogEstoque>().HasKey(l => l.Id);
@@ -59,9 +58,19 @@ namespace GestorDeEstoque.Data
 
             modelBuilder.Entity<LogEstoque>().Property(l => l.Data).IsRequired();
 
+            modelBuilder.Entity<LogEstoque>().Property(l => l.EstoqueId).IsRequired();
+
             //Relacionamento: LogEstoque -> Produto
             modelBuilder.Entity<LogEstoque>().HasOne(l => l.Produto).WithMany(p => p.LogsEstoque).HasForeignKey(l => l.ProdutoId);
 
+            //Tabela ProdutoEstoque
+            modelBuilder.Entity<ProdutoEstoque>().HasKey(pe => new { pe.ProdutoId, pe.EstoqueId });
+
+            modelBuilder.Entity<ProdutoEstoque>().HasOne(pe => pe.Produto).WithMany(p => p.ProdutosEstoques).HasForeignKey(pe => pe.ProdutoId);
+
+            modelBuilder.Entity<ProdutoEstoque>().HasOne(pe => pe.Estoque).WithMany(e => e.ProdutosEstoques).HasForeignKey(pe => pe.EstoqueId);
+
+            modelBuilder.Entity<ProdutoEstoque>().Property(pe => pe.Quantidade).IsRequired();
         }
     }
 }

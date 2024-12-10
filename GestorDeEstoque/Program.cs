@@ -1,18 +1,25 @@
 using Microsoft.EntityFrameworkCore;
 using GestorDeEstoque.Data;
 using GestorDeEstoque.Repositories;
-using GestorDeEstoque.Models;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
+
+
 // Configuração dos serviços
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve;
+    });
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseNpgsql(connectionString));
 builder.Services.AddScoped<ProdutoRepository>();
 builder.Services.AddScoped<EstoqueRepository>();
 builder.Services.AddScoped<LogRepository>();
+builder.Services.AddScoped<ProdutoEstoqueRepository>();
 
 var app = builder.Build();
 

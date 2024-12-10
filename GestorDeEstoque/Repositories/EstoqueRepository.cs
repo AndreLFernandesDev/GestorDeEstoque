@@ -1,5 +1,6 @@
 using GestorDeEstoque.Data;
 using GestorDeEstoque.Models;
+using Microsoft.EntityFrameworkCore;
 namespace GestorDeEstoque.Repositories
 {
     public class EstoqueRepository : IEstoqueRepository
@@ -9,18 +10,18 @@ namespace GestorDeEstoque.Repositories
         {
             _context = context;
         }
-        public async Task<Produto> AtualizarQuantidadeProdutoAsync(int idProduto, decimal quantidade)
+        public async Task<ProdutoEstoque> AtualizarQuantidadeProdutoAsync(int idEstoque, decimal quantidade, int idProduto)
         {
-            var produto = await _context.Produtos.FindAsync(idProduto);
-            if (produto == null)
+            var produtoEstoque = await _context.ProdutosEstoques.FirstOrDefaultAsync(qp => qp.ProdutoId == idProduto && qp.EstoqueId == idEstoque);
+            if (produtoEstoque == null)
             {
-                return null;
+                throw new InvalidOperationException("Produto não encontrado.");
             }
             else
             {
-                produto.Quantidade += quantidade;
+                produtoEstoque.Quantidade += quantidade;
                 _context.SaveChanges();
-                return produto;
+                return produtoEstoque;
             }
         }
     }
