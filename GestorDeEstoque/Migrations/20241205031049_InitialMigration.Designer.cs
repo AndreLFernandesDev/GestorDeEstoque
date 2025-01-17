@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace GestorDeEstoque.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240911005734_CriarTabelaLogEstoque")]
-    partial class CriarTabelaLogEstoque
+    [Migration("20241205031049_InitialMigration")]
+    partial class InitialMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -54,17 +54,22 @@ namespace GestorDeEstoque.Migrations
                     b.Property<DateTime>("Data")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<int>("EstoqueId")
+                        .HasColumnType("integer");
+
                     b.Property<int>("ProdutoId")
                         .HasColumnType("integer");
 
-                    b.Property<int>("Quantidade")
-                        .HasColumnType("integer");
+                    b.Property<decimal>("Quantidade")
+                        .HasColumnType("numeric");
 
                     b.HasKey("Id");
 
+                    b.HasIndex("EstoqueId");
+
                     b.HasIndex("ProdutoId");
 
-                    b.ToTable("LogEstoque");
+                    b.ToTable("LogsEstoques");
                 });
 
             modelBuilder.Entity("GestorDeEstoque.Models.Produto", b =>
@@ -80,9 +85,6 @@ namespace GestorDeEstoque.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)");
 
-                    b.Property<int>("EstoqueId")
-                        .HasColumnType("integer");
-
                     b.Property<string>("Nome")
                         .IsRequired()
                         .HasMaxLength(100)
@@ -91,66 +93,77 @@ namespace GestorDeEstoque.Migrations
                     b.Property<decimal>("Preco")
                         .HasColumnType("numeric");
 
-                    b.Property<decimal>("Quantidade")
-                        .HasColumnType("numeric");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("EstoqueId");
 
                     b.ToTable("Produtos");
                 });
 
-            modelBuilder.Entity("GestorDeEstoque.Models.User", b =>
+            modelBuilder.Entity("GestorDeEstoque.Models.ProdutoEstoque", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
+                    b.Property<int>("ProdutoId")
                         .HasColumnType("integer");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("Age")
+                    b.Property<int>("EstoqueId")
                         .HasColumnType("integer");
 
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("text");
+                    b.Property<decimal>("Quantidade")
+                        .HasColumnType("numeric");
 
-                    b.HasKey("Id");
+                    b.HasKey("ProdutoId", "EstoqueId");
 
-                    b.ToTable("Users");
+                    b.HasIndex("EstoqueId");
+
+                    b.ToTable("ProdutosEstoques");
                 });
 
             modelBuilder.Entity("GestorDeEstoque.Models.LogEstoque", b =>
                 {
+                    b.HasOne("GestorDeEstoque.Models.Estoque", "Estoque")
+                        .WithMany()
+                        .HasForeignKey("EstoqueId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("GestorDeEstoque.Models.Produto", "Produto")
                         .WithMany("LogsEstoque")
                         .HasForeignKey("ProdutoId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.Navigation("Estoque");
+
                     b.Navigation("Produto");
                 });
 
-            modelBuilder.Entity("GestorDeEstoque.Models.Produto", b =>
+            modelBuilder.Entity("GestorDeEstoque.Models.ProdutoEstoque", b =>
                 {
                     b.HasOne("GestorDeEstoque.Models.Estoque", "Estoque")
-                        .WithMany("Produtos")
+                        .WithMany("ProdutosEstoques")
                         .HasForeignKey("EstoqueId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("GestorDeEstoque.Models.Produto", "Produto")
+                        .WithMany("ProdutosEstoques")
+                        .HasForeignKey("ProdutoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("Estoque");
+
+                    b.Navigation("Produto");
                 });
 
             modelBuilder.Entity("GestorDeEstoque.Models.Estoque", b =>
                 {
-                    b.Navigation("Produtos");
+                    b.Navigation("ProdutosEstoques");
                 });
 
             modelBuilder.Entity("GestorDeEstoque.Models.Produto", b =>
                 {
                     b.Navigation("LogsEstoque");
+
+                    b.Navigation("ProdutosEstoques");
                 });
 #pragma warning restore 612, 618
         }
