@@ -1,0 +1,17 @@
+meta {
+  name: Atualizar quantidade estoque
+  type: http
+  seq: 6
+}
+
+put {
+  url: {{URL_PADRAO}}/estoque/1/idProduto/1
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "Quantidade":20
+  }
+}
