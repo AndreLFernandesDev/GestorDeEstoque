@@ -66,7 +66,7 @@ namespace GestorDeEstoque.Controllers
                     Quantidade = novoProdutoDTO.Quantidade
                 };
 
-                await _produtoEstoqueRepository.AdicionarQuantidadeAsync(produtoEstoque);
+                await _produtoEstoqueRepository.CriarProdutoOuInserirQuantidadeAsync(produtoEstoque);
                 await _context.SaveChangesAsync();
 
                 await transaction.CommitAsync();
@@ -123,13 +123,13 @@ namespace GestorDeEstoque.Controllers
             {
                 try
                 {
-                    var quantidade = await _produtoEstoqueRepository.BuscarQuantidadePorIdEstoqueEhIdProdutoAsync(id, idEstoque);
-                    if (quantidade == null)
+                    var produtoEstoque = await _produtoEstoqueRepository.BuscarProdutoPorIdEstoqueEhIdProdutoAsync(id, idEstoque);
+                    if (produtoEstoque == null)
                     {
                         return NotFound("Produto não encontrado");
                     }
-                    await _produtoRepository.RemoverProdutoAsync(quantidade.ProdutoId);
-                    await _produtoEstoqueRepository.RemoverQuantidadeProdutoAsync(quantidade.ProdutoId, quantidade.EstoqueId);
+                    await _produtoRepository.RemoverProdutoAsync(produtoEstoque.ProdutoId);
+                    await _produtoEstoqueRepository.RemoverQuantidadeProdutoAsync(produtoEstoque.ProdutoId, produtoEstoque.EstoqueId);
                     await _context.SaveChangesAsync();
                     await transaction.CommitAsync();
                     return Ok(new { mensagem = "Produto deletado" });

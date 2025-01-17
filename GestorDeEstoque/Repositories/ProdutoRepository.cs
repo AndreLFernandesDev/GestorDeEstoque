@@ -15,8 +15,8 @@ namespace GestorDeEstoque.Repositories
         public async Task<ProdutoDTO> BuscaPorIdProdutoEhIdEstoqueAsync(int idProduto, int idEstoque)
         {
             var produto = await _context.Produtos.FirstOrDefaultAsync(p => p.Id == idProduto);
-            var produtoQuantidade = await _context.ProdutosEstoques.FirstOrDefaultAsync(pq => pq.ProdutoId == idProduto && pq.EstoqueId == idEstoque);
-            if (produto == null || produtoQuantidade == null)
+            var produtoEstoque = await _context.ProdutosEstoques.FirstOrDefaultAsync(pq => pq.ProdutoId == idProduto && pq.EstoqueId == idEstoque);
+            if (produto == null || produtoEstoque == null)
             {
                 throw new InvalidOperationException("Produto ou quantidade não encontrado");
             }
@@ -25,7 +25,7 @@ namespace GestorDeEstoque.Repositories
                 Nome = produto.Nome,
                 Descricao = produto.Descricao,
                 Preco = produto.Preco,
-                Quantidade = produtoQuantidade.Quantidade,
+                Quantidade = produtoEstoque.Quantidade,
                 EstoqueId = idEstoque
             };
             return produtoDTO;
