@@ -11,40 +11,40 @@ namespace GestorDeEstoque.Repositories
             _context = context;
         }
 
-        public async Task<ProdutoEstoque> BuscarQuantidadePorIdEstoqueEhIdProdutoAsync(int idProduto, int idEstoque)
+        public async Task<ProdutoEstoque> BuscarProdutoPorIdEstoqueEhIdProdutoAsync(int idProduto, int idEstoque)
         {
-            var produto = await _context.ProdutosEstoques.FirstOrDefaultAsync(pq => pq.ProdutoId == idProduto && pq.EstoqueId == idEstoque);
-            if (produto == null)
+            var produtoEstoque = await _context.ProdutosEstoques.FirstOrDefaultAsync(pq => pq.ProdutoId == idProduto && pq.EstoqueId == idEstoque);
+            if (produtoEstoque == null)
             {
                 throw new Exception("Produto não existe");
             }
 
-            return produto;
+            return produtoEstoque;
         }
 
-        public async Task AdicionarQuantidadeAsync(ProdutoEstoque produtoEstoque)
+        public async Task CriarProdutoOuInserirQuantidadeAsync(ProdutoEstoque produtoEstoque)
         {
-            var produto = await _context.ProdutosEstoques.FirstOrDefaultAsync(pe => pe.ProdutoId == produtoEstoque.ProdutoId && pe.EstoqueId == produtoEstoque.EstoqueId);
-            if (produto == null)
+            var produtoEstoqueExistente = await _context.ProdutosEstoques.FirstOrDefaultAsync(pe => pe.ProdutoId == produtoEstoque.ProdutoId && pe.EstoqueId == produtoEstoque.EstoqueId);
+            if (produtoEstoqueExistente == null)
             {
                 await _context.ProdutosEstoques.AddAsync(produtoEstoque);
             }
             else
             {
-                produto.Quantidade += produtoEstoque.Quantidade;
-                _context.ProdutosEstoques.Update(produto);
+                produtoEstoqueExistente.Quantidade += produtoEstoque.Quantidade;
+                _context.ProdutosEstoques.Update(produtoEstoqueExistente);
             }
             await _context.SaveChangesAsync();
         }
 
         public async Task<bool> RemoverQuantidadeProdutoAsync(int idProduto, int idEstoque)
         {
-            var produto = await _context.ProdutosEstoques.FirstOrDefaultAsync(qP => qP.ProdutoId == idProduto && qP.EstoqueId == idEstoque);
-            if (produto == null)
+            var produtoEstoque = await _context.ProdutosEstoques.FirstOrDefaultAsync(qP => qP.ProdutoId == idProduto && qP.EstoqueId == idEstoque);
+            if (produtoEstoque == null)
             {
                 return false;
             }
-            _context.ProdutosEstoques.Remove(produto);
+            _context.ProdutosEstoques.Remove(produtoEstoque);
             await _context.SaveChangesAsync();
             return true;
         }
