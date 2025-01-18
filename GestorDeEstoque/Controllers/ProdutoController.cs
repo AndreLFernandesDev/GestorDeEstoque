@@ -1,8 +1,9 @@
+using GestorDeEstoque.Data;
+using GestorDeEstoque.DTOs;
 using GestorDeEstoque.Models;
 using GestorDeEstoque.Repositories;
 using Microsoft.AspNetCore.Mvc;
-using GestorDeEstoque.DTOs;
-using GestorDeEstoque.Data;
+
 namespace GestorDeEstoque.Controllers
 {
     [ApiController]
@@ -12,11 +13,19 @@ namespace GestorDeEstoque.Controllers
         private readonly ApplicationDbContext _context;
         private ProdutoRepository _produtoRepository;
         private ProdutoEstoqueRepository _produtoEstoqueRepository;
-        public ProdutoController(ApplicationDbContext context, ProdutoRepository produtoRepository, ProdutoEstoqueRepository produtoEstoqueRepository)
+
+        public ProdutoController(
+            ApplicationDbContext context,
+            ProdutoRepository produtoRepository,
+            ProdutoEstoqueRepository produtoEstoqueRepository
+        )
         {
             _context = context;
-            _produtoRepository = produtoRepository ?? throw new ArgumentNullException(nameof(produtoRepository));
-            _produtoEstoqueRepository = produtoEstoqueRepository ?? throw new ArgumentNullException(nameof(produtoEstoqueRepository));
+            _produtoRepository =
+                produtoRepository ?? throw new ArgumentNullException(nameof(produtoRepository));
+            _produtoEstoqueRepository =
+                produtoEstoqueRepository
+                ?? throw new ArgumentNullException(nameof(produtoEstoqueRepository));
         }
 
         [HttpGet("{produtoId}/estoqueId/{estoqueId}")]
@@ -24,7 +33,10 @@ namespace GestorDeEstoque.Controllers
         {
             try
             {
-                var produto = await _produtoRepository.BuscaPorIdProdutoEhIdEstoqueAsync(produtoId, estoqueId);
+                var produto = await _produtoRepository.BuscaPorIdProdutoEhIdEstoqueAsync(
+                    produtoId,
+                    estoqueId
+                );
                 if (produto == null)
                 {
                     return NotFound(new { mensagem = "Produto ou estoque não encontrado" });
@@ -36,7 +48,6 @@ namespace GestorDeEstoque.Controllers
                 return BadRequest(new { mensagem = ex.Message });
             }
         }
-
 
         [HttpPost]
         public async Task<IActionResult> InserirProduto([FromBody] ProdutoDTO novoProdutoDTO)
@@ -50,10 +61,9 @@ namespace GestorDeEstoque.Controllers
                 }
                 var produto = new Produto
                 {
-
                     Nome = novoProdutoDTO.Nome,
                     Descricao = novoProdutoDTO.Descricao,
-                    Preco = novoProdutoDTO.Preco
+                    Preco = novoProdutoDTO.Preco,
                 };
 
                 await _produtoRepository.InserirProdutoAsync(produto);
@@ -63,10 +73,12 @@ namespace GestorDeEstoque.Controllers
                 {
                     ProdutoId = produto.Id,
                     EstoqueId = novoProdutoDTO.EstoqueId,
-                    Quantidade = novoProdutoDTO.Quantidade
+                    Quantidade = novoProdutoDTO.Quantidade,
                 };
 
-                await _produtoEstoqueRepository.CriarProdutoOuInserirQuantidadeAsync(produtoEstoque);
+                await _produtoEstoqueRepository.CriarProdutoOuInserirQuantidadeAsync(
+                    produtoEstoque
+                );
                 await _context.SaveChangesAsync();
 
                 await transaction.CommitAsync();
@@ -80,7 +92,9 @@ namespace GestorDeEstoque.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<ProdutoDTO>>> ListarProdutos([FromQuery] int estoqueId)
+        public async Task<ActionResult<IEnumerable<ProdutoDTO>>> ListarProdutos(
+            [FromQuery] int estoqueId
+        )
         {
             try
             {
@@ -95,11 +109,14 @@ namespace GestorDeEstoque.Controllers
             {
                 return StatusCode(500, "Ocorreu erro interno ao buscar produtos");
             }
-
         }
 
         [HttpPut("{idProduto}/estoqueId/{idEstoque}")]
-        public async Task<IActionResult> AtualizarProduto(int idProduto, [FromBody] Produto produtoAtualizado, int idEstoque)
+        public async Task<IActionResult> AtualizarProduto(
+            int idProduto,
+            [FromBody] Produto produtoAtualizado,
+            int idEstoque
+        )
         {
             try
             {
@@ -107,7 +124,11 @@ namespace GestorDeEstoque.Controllers
                 {
                     return BadRequest("Dados inválidos do produto");
                 }
-                await _produtoRepository.AtualizarProdutoAsync(idProduto, produtoAtualizado, idEstoque);
+                await _produtoRepository.AtualizarProdutoAsync(
+                    idProduto,
+                    produtoAtualizado,
+                    idEstoque
+                );
                 return Ok();
             }
             catch (Exception ex)
@@ -123,13 +144,20 @@ namespace GestorDeEstoque.Controllers
             {
                 try
                 {
-                    var produtoEstoque = await _produtoEstoqueRepository.BuscarProdutoPorIdEstoqueEhIdProdutoAsync(id, idEstoque);
+                    var produtoEstoque =
+                        await _produtoEstoqueRepository.BuscarProdutoPorIdEstoqueEhIdProdutoAsync(
+                            id,
+                            idEstoque
+                        );
                     if (produtoEstoque == null)
                     {
                         return NotFound("Produto não encontrado");
                     }
                     await _produtoRepository.RemoverProdutoAsync(produtoEstoque.ProdutoId);
-                    await _produtoEstoqueRepository.RemoverQuantidadeProdutoAsync(produtoEstoque.ProdutoId, produtoEstoque.EstoqueId);
+                    await _produtoEstoqueRepository.RemoverQuantidadeProdutoAsync(
+                        produtoEstoque.ProdutoId,
+                        produtoEstoque.EstoqueId
+                    );
                     await _context.SaveChangesAsync();
                     await transaction.CommitAsync();
                     return Ok(new { mensagem = "Produto deletado" });

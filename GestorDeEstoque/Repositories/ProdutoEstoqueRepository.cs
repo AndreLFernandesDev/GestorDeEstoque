@@ -1,19 +1,26 @@
-using GestorDeEstoque.Models;
 using GestorDeEstoque.Data;
+using GestorDeEstoque.Models;
 using Microsoft.EntityFrameworkCore;
+
 namespace GestorDeEstoque.Repositories
 {
     public class ProdutoEstoqueRepository : IProdutoEstoqueRepository
     {
         private readonly ApplicationDbContext _context;
+
         public ProdutoEstoqueRepository(ApplicationDbContext context)
         {
             _context = context;
         }
 
-        public async Task<ProdutoEstoque> BuscarProdutoPorIdEstoqueEhIdProdutoAsync(int idProduto, int idEstoque)
+        public async Task<ProdutoEstoque> BuscarProdutoPorIdEstoqueEhIdProdutoAsync(
+            int idProduto,
+            int idEstoque
+        )
         {
-            var produtoEstoque = await _context.ProdutosEstoques.FirstOrDefaultAsync(pq => pq.ProdutoId == idProduto && pq.EstoqueId == idEstoque);
+            var produtoEstoque = await _context.ProdutosEstoques.FirstOrDefaultAsync(pq =>
+                pq.ProdutoId == idProduto && pq.EstoqueId == idEstoque
+            );
             if (produtoEstoque == null)
             {
                 throw new Exception("Produto não existe");
@@ -24,7 +31,9 @@ namespace GestorDeEstoque.Repositories
 
         public async Task CriarProdutoOuInserirQuantidadeAsync(ProdutoEstoque produtoEstoque)
         {
-            var produtoEstoqueExistente = await _context.ProdutosEstoques.FirstOrDefaultAsync(pe => pe.ProdutoId == produtoEstoque.ProdutoId && pe.EstoqueId == produtoEstoque.EstoqueId);
+            var produtoEstoqueExistente = await _context.ProdutosEstoques.FirstOrDefaultAsync(pe =>
+                pe.ProdutoId == produtoEstoque.ProdutoId && pe.EstoqueId == produtoEstoque.EstoqueId
+            );
             if (produtoEstoqueExistente == null)
             {
                 await _context.ProdutosEstoques.AddAsync(produtoEstoque);
@@ -39,7 +48,9 @@ namespace GestorDeEstoque.Repositories
 
         public async Task<bool> RemoverQuantidadeProdutoAsync(int idProduto, int idEstoque)
         {
-            var produtoEstoque = await _context.ProdutosEstoques.FirstOrDefaultAsync(qP => qP.ProdutoId == idProduto && qP.EstoqueId == idEstoque);
+            var produtoEstoque = await _context.ProdutosEstoques.FirstOrDefaultAsync(qP =>
+                qP.ProdutoId == idProduto && qP.EstoqueId == idEstoque
+            );
             if (produtoEstoque == null)
             {
                 return false;
@@ -50,4 +61,3 @@ namespace GestorDeEstoque.Repositories
         }
     }
 }
-

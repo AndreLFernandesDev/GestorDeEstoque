@@ -3,19 +3,27 @@ using GestorDeEstoque.DTOs;
 using GestorDeEstoque.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+
 namespace GestorDeEstoque.Repositories
 {
     public class ProdutoRepository : IProdutoRepository
     {
         private readonly ApplicationDbContext _context;
+
         public ProdutoRepository(ApplicationDbContext context)
         {
             _context = context;
         }
-        public async Task<ProdutoDTO> BuscaPorIdProdutoEhIdEstoqueAsync(int idProduto, int idEstoque)
+
+        public async Task<ProdutoDTO> BuscaPorIdProdutoEhIdEstoqueAsync(
+            int idProduto,
+            int idEstoque
+        )
         {
             var produto = await _context.Produtos.FirstOrDefaultAsync(p => p.Id == idProduto);
-            var produtoEstoque = await _context.ProdutosEstoques.FirstOrDefaultAsync(pq => pq.ProdutoId == idProduto && pq.EstoqueId == idEstoque);
+            var produtoEstoque = await _context.ProdutosEstoques.FirstOrDefaultAsync(pq =>
+                pq.ProdutoId == idProduto && pq.EstoqueId == idEstoque
+            );
             if (produto == null || produtoEstoque == null)
             {
                 throw new InvalidOperationException("Produto ou quantidade não encontrado");
@@ -26,10 +34,11 @@ namespace GestorDeEstoque.Repositories
                 Descricao = produto.Descricao,
                 Preco = produto.Preco,
                 Quantidade = produtoEstoque.Quantidade,
-                EstoqueId = idEstoque
+                EstoqueId = idEstoque,
             };
             return produtoDTO;
         }
+
         public async Task<bool> InserirProdutoAsync(Produto novoProduto)
         {
             try
@@ -45,29 +54,35 @@ namespace GestorDeEstoque.Repositories
 
         public async Task<IEnumerable<ProdutoDTO>> ListarProdutosAsync(int idEstoque)
         {
-            var produtos = await _context.ProdutosEstoques.Include(pe => pe.Produto)
-            .Where(pe => pe.EstoqueId == idEstoque)
-            .Select
-            (
-                  pe => new ProdutoDTO
-                  {
-                      Nome = pe.Produto.Nome,
-                      Descricao = pe.Produto.Descricao,
-                      Preco = pe.Produto.Preco,
-                      Quantidade = pe.Quantidade,
-                      EstoqueId = idEstoque
-                  }
-            )
-            .ToListAsync();
+            var produtos = await _context
+                .ProdutosEstoques.Include(pe => pe.Produto)
+                .Where(pe => pe.EstoqueId == idEstoque)
+                .Select(pe => new ProdutoDTO
+                {
+                    Nome = pe.Produto.Nome,
+                    Descricao = pe.Produto.Descricao,
+                    Preco = pe.Produto.Preco,
+                    Quantidade = pe.Quantidade,
+                    EstoqueId = idEstoque,
+                })
+                .ToListAsync();
             return produtos;
         }
 
-        public async Task AtualizarProdutoAsync(int idProduto, Produto produtoAtualizado, int estoqueId)
+        public async Task AtualizarProdutoAsync(
+            int idProduto,
+            Produto produtoAtualizado,
+            int estoqueId
+        )
         {
-            var produtoEstoque = await _context.ProdutosEstoques.FirstOrDefaultAsync(pe => pe.ProdutoId == idProduto && pe.EstoqueId == estoqueId);
+            var produtoEstoque = await _context.ProdutosEstoques.FirstOrDefaultAsync(pe =>
+                pe.ProdutoId == idProduto && pe.EstoqueId == estoqueId
+            );
             if (produtoEstoque == null)
             {
-                throw new InvalidOperationException("Produto não encontrado no estoque especificado");
+                throw new InvalidOperationException(
+                    "Produto não encontrado no estoque especificado"
+                );
             }
             var produto = await _context.Produtos.FirstOrDefaultAsync(P => P.Id == idProduto);
             if (produto == null)
