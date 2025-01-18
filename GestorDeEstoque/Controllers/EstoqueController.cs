@@ -47,6 +47,24 @@ namespace GestorDeEstoque.Controllers
         }
 
         [HttpGet("{idEstoque}")]
+        public async Task<ActionResult<Estoque>> BuscarEstoquePorIdAsync(int idEstoque)
+        {
+            try
+            {
+                var estoque = await _estoqueRepository.BuscarEstoquePorIdAsync(idEstoque);
+                if (estoque == null)
+                {
+                    return NotFound("Estoque não encontrado");
+                }
+                return Ok(estoque);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
+            }
+        }
+
+        [HttpGet("{idEstoque}/logs")]
         public async Task<ActionResult<IEnumerable<Produto>>> ObterLogsAsync(int idEstoque)
         {
             try
