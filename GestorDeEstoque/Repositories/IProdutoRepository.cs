@@ -1,5 +1,6 @@
-using GestorDeEstoque.Models;
 using GestorDeEstoque.DTOs;
+using GestorDeEstoque.Models;
+
 namespace GestorDeEstoque.Repositories
 {
     public interface IProdutoRepository
