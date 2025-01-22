@@ -33,22 +33,26 @@ namespace GestorDeEstoque.Repositories
                 Nome = produto.Nome,
                 Descricao = produto.Descricao,
                 Preco = produto.Preco,
-                Quantidade = produtoEstoque.Quantidade,
-                EstoqueId = idEstoque,
+                Quantidade = produtoEstoque.Quantidade
             };
             return produtoDTO;
         }
 
-        public async Task<bool> InserirProdutoAsync(Produto novoProduto)
+        public async Task<bool> InserirProdutoAsync(int idEstoque,Produto novoProduto)
         {
             try
             {
+                var estoque = await _context.Estoques.FindAsync(idEstoque);
+                if (estoque == null)
+                {
+                    return false;
+                }
                 await _context.AddAsync(novoProduto);
                 return _context.SaveChanges() > 0;
             }
             catch
             {
-                return false;
+                throw;
             }
         }
 
@@ -62,8 +66,7 @@ namespace GestorDeEstoque.Repositories
                     Nome = pe.Produto.Nome,
                     Descricao = pe.Produto.Descricao,
                     Preco = pe.Produto.Preco,
-                    Quantidade = pe.Quantidade,
-                    EstoqueId = idEstoque,
+                    Quantidade = pe.Quantidade
                 })
                 .ToListAsync();
             return produtos;
