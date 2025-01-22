@@ -29,5 +29,23 @@ namespace GestorDeEstoque.Repositories
                 .FirstOrDefaultAsync(e => e.Id == id);
             return estoque;
         }
+
+        public async Task<bool> AdicionarEstoqueAsync(Estoque novoEstoque)
+        {
+            try
+            {
+                _context.Estoques.Add(novoEstoque);
+                var resultado=await _context.SaveChangesAsync();
+                if(resultado==0)
+                {
+                    throw new Exception ("Estoque não adicionado, nenhuma alteração feita no banco de dados");
+                }
+                return true;
+            }
+            catch(Exception)
+            {
+                throw;
+            }
+        }
     }
 }
