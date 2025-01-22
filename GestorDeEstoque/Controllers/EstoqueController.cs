@@ -81,5 +81,22 @@ namespace GestorDeEstoque.Controllers
                 return BadRequest(ex);
             }
         }
+
+        [HttpPost]
+        public async Task<ActionResult<bool>> AdicionarEstoqueAsync([FromBody]Estoque novoEstoque)
+        {
+            try{
+                var resultado=await _estoqueRepository.AdicionarEstoqueAsync(novoEstoque);
+                if(resultado==false)
+                {
+                    return BadRequest("Estoque não adicionado");
+                }
+                return Ok(novoEstoque);
+            }
+            catch(Exception ex)
+            {
+                return BadRequest(ex);
+            }
+        } 
     }
 }
