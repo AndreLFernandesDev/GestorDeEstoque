@@ -159,5 +159,26 @@ namespace GestorDeEstoque.Controllers
                 return StatusCode(500, "Ocorreu erro interno ao buscar produtos");
             }
         }
+
+        [HttpGet("{idEstoque}/produtos/{idProduto}")]
+        public async Task<IActionResult> BuscarProdutoPorId(int idEstoque, int idProduto)
+        {
+            try
+            {
+                var produto = await _produtoRepository.BuscaPorIdProdutoEhIdEstoqueAsync(
+                    idEstoque,
+                    idProduto
+                );
+                if (produto == null)
+                {
+                    return NotFound(new { mensagem = "Estoque ou produto não encontrado" });
+                }
+                return Ok(produto);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { mensagem = ex.Message });
+            }
+        }
     }
 }
