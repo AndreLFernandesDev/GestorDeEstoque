@@ -123,5 +123,23 @@ namespace GestorDeEstoque.Controllers
                 return BadRequest(ex);
             }
         }
+
+        [HttpDelete("{idEstoque}")]
+        public async Task<ActionResult<bool>> RemoverEstoqueAsync(int idEstoque)
+        {
+            try
+            {
+                var resultado = await _estoqueRepository.RemoverEstoqueAsync(idEstoque);
+                if (resultado == false)
+                {
+                    return NotFound("Estoque não encontrado");
+                }
+                return Ok(new { mensagem = "Estoque deletado" });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
+            }
+        }
     }
 }

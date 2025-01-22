@@ -70,5 +70,27 @@ namespace GestorDeEstoque.Repositories
                 throw;
             }
         }
+
+        public async Task<bool> RemoverEstoqueAsync(int idEstoque)
+        {
+            try{
+                var estoque = await _context.Estoques.FindAsync(idEstoque);
+                if(estoque==null)
+                {
+                    return false;
+                }
+                _context.Estoques.Remove(estoque);
+                var resultado=await _context.SaveChangesAsync();
+                if(resultado==0)
+                {
+                    throw new Exception("Estoque não deletado, nenhuma alteração feita no banco de dados");
+                }
+                return true;
+            }
+            catch
+            {
+                throw;
+            }
+        }
     }
 }
