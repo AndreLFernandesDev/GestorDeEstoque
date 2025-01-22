@@ -49,48 +49,6 @@ namespace GestorDeEstoque.Controllers
             }
         }
 
-        [HttpPost]
-        public async Task<IActionResult> InserirProduto([FromBody] ProdutoDTO novoProdutoDTO)
-        {
-            using var transaction = _context.Database.BeginTransaction();
-            try
-            {
-                if (!ModelState.IsValid)
-                {
-                    return BadRequest(ModelState);
-                }
-                var produto = new Produto
-                {
-                    Nome = novoProdutoDTO.Nome,
-                    Descricao = novoProdutoDTO.Descricao,
-                    Preco = novoProdutoDTO.Preco,
-                };
-
-                await _produtoRepository.InserirProdutoAsync(produto);
-                await _context.SaveChangesAsync();
-
-                var produtoEstoque = new ProdutoEstoque
-                {
-                    ProdutoId = produto.Id,
-                    EstoqueId = novoProdutoDTO.EstoqueId,
-                    Quantidade = novoProdutoDTO.Quantidade,
-                };
-
-                await _produtoEstoqueRepository.CriarProdutoOuInserirQuantidadeAsync(
-                    produtoEstoque
-                );
-                await _context.SaveChangesAsync();
-
-                await transaction.CommitAsync();
-                return Ok(new { mensagem = "Produto criado" });
-            }
-            catch (Exception ex)
-            {
-                await transaction.RollbackAsync();
-                return BadRequest(new { mensagem = ex.Message });
-            }
-        }
-
         [HttpGet]
         public async Task<ActionResult<IEnumerable<ProdutoDTO>>> ListarProdutos(
             [FromQuery] int estoqueId

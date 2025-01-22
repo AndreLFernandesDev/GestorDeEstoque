@@ -15,17 +15,21 @@ namespace GestorDeEstoque.Controllers
         private EstoqueRepository _estoqueRepository;
         private LogRepository _logRepository;
 
+        private ProdutoEstoqueRepository _produtoEstoqueRepository;
+
         public EstoqueController(
             ApplicationDbContext context,
             ProdutoRepository produtoRepository,
             EstoqueRepository estoqueRepository,
-            LogRepository logRepository
+            LogRepository logRepository,
+            ProdutoEstoqueRepository produtoEstoqueRepository
         )
         {
             _context = context;
             _produtoRepository = produtoRepository;
             _estoqueRepository = estoqueRepository;
             _logRepository = logRepository;
+            _produtoEstoqueRepository = produtoEstoqueRepository;
         }
 
         [HttpGet]
@@ -177,6 +181,58 @@ namespace GestorDeEstoque.Controllers
             }
             catch (Exception ex)
             {
+                return BadRequest(new { mensagem = ex.Message });
+            }
+        }
+
+        [HttpPost("{idEstoque}/produtos")]
+        public async Task<IActionResult> InserirProdutoAsync(
+            int idEstoque,
+            [FromBody] ProdutoDTO novoProdutoDTO
+        )
+        {
+            using var transaction = _context.Database.BeginTransaction();
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState);
+                }
+                var produto = new Produto
+                {
+                    Nome = novoProdutoDTO.Nome,
+                    Descricao = novoProdutoDTO.Descricao,
+                    Preco = novoProdutoDTO.Preco,
+                };
+
+                var estoqueExiste = await _produtoRepository.InserirProdutoAsync(
+                    idEstoque,
+                    produto
+                );
+                if (!estoqueExiste)
+                {
+                    return NotFound(new { mensagem = "Estoque não encontrado" });
+                }
+                await _context.SaveChangesAsync();
+
+                var produtoEstoque = new ProdutoEstoque
+                {
+                    ProdutoId = produto.Id,
+                    EstoqueId = idEstoque,
+                    Quantidade = novoProdutoDTO.Quantidade,
+                };
+
+                await _produtoEstoqueRepository.CriarProdutoOuInserirQuantidadeAsync(
+                    produtoEstoque
+                );
+                await _context.SaveChangesAsync();
+
+                await transaction.CommitAsync();
+                return Ok(new { mensagem = "Produto criado" });
+            }
+            catch (Exception ex)
+            {
+                await transaction.RollbackAsync();
                 return BadRequest(new { mensagem = ex.Message });
             }
         }
