@@ -16,17 +16,17 @@ namespace GestorDeEstoque.Repositories
         }
 
         public async Task<ProdutoDTO> BuscaPorIdProdutoEhIdEstoqueAsync(
-            int idProduto,
-            int idEstoque
+            int idEstoque,
+            int idProduto
         )
         {
             var produto = await _context.Produtos.FirstOrDefaultAsync(p => p.Id == idProduto);
-            var produtoEstoque = await _context.ProdutosEstoques.FirstOrDefaultAsync(pq =>
-                pq.ProdutoId == idProduto && pq.EstoqueId == idEstoque
+            var produtoEstoque = await _context.ProdutosEstoques.FirstOrDefaultAsync(pe =>
+                pe.ProdutoId == idEstoque && pe.EstoqueId == idEstoque
             );
             if (produto == null || produtoEstoque == null)
             {
-                throw new InvalidOperationException("Produto ou quantidade não encontrado");
+                throw new InvalidOperationException("Estoque ou produto não encontrado");
             }
             var produtoDTO = new ProdutoDTO
             {
