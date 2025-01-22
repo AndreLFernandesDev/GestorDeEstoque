@@ -1,0 +1,17 @@
+meta {
+  name: AtualizarEstoque
+  type: http
+  seq: 12
+}
+
+put {
+  url: {{URL_PADRAO}}/estoques/2
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "Nome":"Loja Santana"
+  }
+}
