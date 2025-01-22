@@ -83,20 +83,45 @@ namespace GestorDeEstoque.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<bool>> AdicionarEstoqueAsync([FromBody]Estoque novoEstoque)
+        public async Task<ActionResult<bool>> AdicionarEstoqueAsync([FromBody] Estoque novoEstoque)
         {
-            try{
-                var resultado=await _estoqueRepository.AdicionarEstoqueAsync(novoEstoque);
-                if(resultado==false)
+            try
+            {
+                var resultado = await _estoqueRepository.AdicionarEstoqueAsync(novoEstoque);
+                if (resultado == false)
                 {
                     return BadRequest("Estoque não adicionado");
                 }
                 return Ok(novoEstoque);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return BadRequest(ex);
             }
-        } 
+        }
+
+        [HttpPut("{idEstoque}")]
+        public async Task<ActionResult<bool>> AtualizarEstoqueAsync(
+            int idEstoque,
+            [FromBody] Estoque estoqueAtualizado
+        )
+        {
+            try
+            {
+                var resultado = await _estoqueRepository.AtualizarEstoqueAsync(
+                    idEstoque,
+                    estoqueAtualizado
+                );
+                if (resultado == false)
+                {
+                    return NotFound("Estoque não encontrado");
+                }
+                return Ok(estoqueAtualizado);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
+            }
+        }
     }
 }

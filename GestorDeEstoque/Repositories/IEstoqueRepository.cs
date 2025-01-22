@@ -10,5 +10,7 @@ namespace GestorDeEstoque.Repositories
         public Task<EstoqueDTO> BuscarEstoquePorIdAsync(int id);
 
         public Task<bool> AdicionarEstoqueAsync(Estoque novoEstoque);
+
+        public Task<bool> AtualizarEstoqueAsync(int idEstoque,Estoque estoqueAtualizado);
     }
 }

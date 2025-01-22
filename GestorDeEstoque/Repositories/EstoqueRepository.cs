@@ -38,15 +38,34 @@ namespace GestorDeEstoque.Repositories
                 var resultado=await _context.SaveChangesAsync();
                 if(resultado==0)
                 {
-<<<<<<< HEAD
                     throw new Exception ("Estoque não adicionado, nenhuma alteração feita no banco de dados");
-=======
-                    throw new Exception ("Produto não adicionado, nenhuma alteração feita no banco de dados");
->>>>>>> c422c2fa0d8e2c3167cdcfe8cb33eb983101260a
                 }
                 return true;
             }
             catch(Exception)
+            {
+                throw;
+            }
+        }
+
+        public async Task<bool> AtualizarEstoqueAsync(int idEstoque,Estoque estoqueAtualizado)
+        {
+         try{
+            var estoque =await _context.Estoques.FindAsync(idEstoque);
+            if(estoque==null)
+            {
+                return false;
+            }
+            estoque.Nome=estoqueAtualizado.Nome;
+            _context.Estoques.Update(estoque);
+            var resultado=await _context.SaveChangesAsync();
+            if(resultado==0)
+            {
+                throw new Exception("Estoque não atualizado, nenhuma alteração feita no banco de dados");
+            }
+            return true;
+         }
+         catch
             {
                 throw;
             }
