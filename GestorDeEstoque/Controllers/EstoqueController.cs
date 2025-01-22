@@ -141,5 +141,23 @@ namespace GestorDeEstoque.Controllers
                 return BadRequest(ex);
             }
         }
+
+        [HttpGet("{idEstoque}/produtos")]
+        public async Task<ActionResult<IEnumerable<ProdutoDTO>>> ListarProdutos(int idEstoque)
+        {
+            try
+            {
+                var produtos = await _produtoRepository.ListarProdutosAsync(idEstoque);
+                if (produtos == null)
+                {
+                    return NotFound("Nenhum produto encontrado");
+                }
+                return Ok(produtos);
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, "Ocorreu erro interno ao buscar produtos");
+            }
+        }
     }
 }
