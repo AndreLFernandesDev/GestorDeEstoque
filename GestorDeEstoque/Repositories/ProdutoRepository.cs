@@ -72,14 +72,14 @@ namespace GestorDeEstoque.Repositories
             return produtos;
         }
 
-        public async Task AtualizarProdutoAsync(
-            int idProduto,
+        public async Task<Produto> AtualizarProdutoAsync(
+            int idEstoque,
             Produto produtoAtualizado,
-            int estoqueId
+            int idProduto
         )
         {
             var produtoEstoque = await _context.ProdutosEstoques.FirstOrDefaultAsync(pe =>
-                pe.ProdutoId == idProduto && pe.EstoqueId == estoqueId
+                pe.EstoqueId == idEstoque && pe.ProdutoId == idProduto
             );
             if (produtoEstoque == null)
             {
@@ -97,6 +97,7 @@ namespace GestorDeEstoque.Repositories
             produto.Preco = produtoAtualizado.Preco;
 
             await _context.SaveChangesAsync();
+            return produto;
         }
 
         public async Task<bool> RemoverProdutoAsync(int id)

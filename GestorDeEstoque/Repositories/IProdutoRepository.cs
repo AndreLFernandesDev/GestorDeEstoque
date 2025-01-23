@@ -8,7 +8,7 @@ namespace GestorDeEstoque.Repositories
         Task<ProdutoDTO> BuscaPorIdProdutoEhIdEstoqueAsync(int idEstoque, int idProduto);
         Task<bool> InserirProdutoAsync(int idEstoque,Produto novoProduto);
         Task<IEnumerable<ProdutoDTO>> ListarProdutosAsync(int idEstoque);
-        Task AtualizarProdutoAsync(int idProduto, Produto produtoAtualizado, int idEstoque);
+        Task<Produto> AtualizarProdutoAsync(int idEstoque, Produto produtoAtualizado, int idProduto);
         Task<bool> RemoverProdutoAsync(int id);
     }
 }
