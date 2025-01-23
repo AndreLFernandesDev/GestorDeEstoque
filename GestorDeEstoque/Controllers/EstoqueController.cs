@@ -236,5 +236,32 @@ namespace GestorDeEstoque.Controllers
                 return BadRequest(new { mensagem = ex.Message });
             }
         }
+
+         [HttpPut("{idEstoque}/produtos/{idProduto}")]
+        public async Task<ActionResult<Produto>> AtualizarProduto(
+            int idEstoque,
+            [FromBody] Produto produtoAtualizado,
+            int idProduto
+        )
+        {
+            try
+            {
+                if (produtoAtualizado == null)
+                {
+                    return BadRequest("Dados inválidos do produto");
+                }
+                await _produtoRepository.AtualizarProdutoAsync(
+                    idEstoque,
+                    produtoAtualizado,
+                    idProduto
+                );
+                return Ok(new { produtoAtualizado.Nome, produtoAtualizado.Descricao, produtoAtualizado.Preco });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { mensagem = ex.Message });
+            }
+        }
+
     }
 }
