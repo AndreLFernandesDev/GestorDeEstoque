@@ -186,7 +186,7 @@ namespace GestorDeEstoque.Controllers
         }
 
         [HttpPost("{idEstoque}/produtos")]
-        public async Task<IActionResult> InserirProdutoAsync(
+        public async Task<ActionResult<ProdutoDTO>> InserirProdutoAsync(
             int idEstoque,
             [FromBody] ProdutoDTO novoProdutoDTO
         )
@@ -228,7 +228,15 @@ namespace GestorDeEstoque.Controllers
                 await _context.SaveChangesAsync();
 
                 await transaction.CommitAsync();
-                return Ok(new { mensagem = "Produto criado" });
+
+                var produtoDTO = new ProdutoDTO
+                {
+                    Nome = produto.Nome,
+                    Descricao = produto.Descricao,
+                    Preco = produto.Preco,
+                    Quantidade = produtoEstoque.Quantidade,
+                };
+                return Ok(produtoDTO);
             }
             catch (Exception ex)
             {
