@@ -1,4 +1,5 @@
 using GestorDeEstoque.Data;
+using GestorDeEstoque.DTOs;
 using GestorDeEstoque.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -44,6 +45,36 @@ namespace GestorDeEstoque.Repositories
                 _context.ProdutosEstoques.Update(produtoEstoqueExistente);
             }
             await _context.SaveChangesAsync();
+        }
+
+        public async Task<ProdutoDTO> AtualizarQuantidadeProdutoAsync(
+            int idEstoque,
+            int idProduto,
+            AtualizarQuantidadeProdutoDTO quantidadeProdutoDTO
+        )
+        {
+            var produtoEstoque = await _context
+                .ProdutosEstoques.Include(pe => pe.Produto)
+                .FirstOrDefaultAsync(pe => pe.ProdutoId == idProduto && pe.EstoqueId == idEstoque);
+
+            if (produtoEstoque == null)
+            {
+                throw new Exception("Produto ou estoque não existe");
+            }
+            produtoEstoque.Quantidade += quantidadeProdutoDTO.Quantidade;
+            if (produtoEstoque.Quantidade < 0)
+            {
+                throw new Exception("Quantidade não pode ser negativa");
+            }
+            _context.ProdutosEstoques.Update(produtoEstoque);
+            await _context.SaveChangesAsync();
+            return new ProdutoDTO
+            {
+                Nome = produtoEstoque.Produto.Nome,
+                Descricao = produtoEstoque.Produto.Descricao,
+                Preco = produtoEstoque.Produto.Preco,
+                Quantidade = produtoEstoque.Quantidade,
+            };
         }
 
         public async Task<bool> RemoverQuantidadeProdutoAsync(int idProduto, int idEstoque)
