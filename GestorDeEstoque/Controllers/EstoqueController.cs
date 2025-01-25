@@ -299,5 +299,36 @@ namespace GestorDeEstoque.Controllers
                 return BadRequest(new { mensagem = ex.Message });
             }
         }
+
+        [HttpDelete("{idEstoque}/produtos/{idProduto}")]
+        public async Task<IActionResult> DeletarProduto(int idEstoque, int idProduto)
+        {
+            using var transaction = _context.Database.BeginTransaction();
+            {
+                try
+                {
+                    var produtoEstoque =
+                        await _produtoEstoqueRepository.BuscarProdutoPorIdProdutoEhIdEstoqueAsync(
+                            idProduto,
+                            idEstoque
+                        );
+                    var produtoDeletado = await _produtoRepository.RemoverProdutoAsync(
+                        produtoEstoque.ProdutoId
+                    );
+                    await _produtoEstoqueRepository.RemoverQuantidadeProdutoAsync(
+                        produtoEstoque.ProdutoId,
+                        produtoEstoque.EstoqueId
+                    );
+                    await _context.SaveChangesAsync();
+                    await transaction.CommitAsync();
+                    return Ok(new { mensagem = $"Produto deletado: {produtoDeletado.Nome}" });
+                }
+                catch (Exception ex)
+                {
+                    await transaction.RollbackAsync();
+                    return BadRequest(new { mensagem = ex.Message });
+                }
+            }
+        }
     }
 }

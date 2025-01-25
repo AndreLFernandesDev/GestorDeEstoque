@@ -5,7 +5,7 @@ namespace GestorDeEstoque.Repositories
 {
     public interface IProdutoEstoqueRepository
     {
-        public Task<ProdutoEstoque> BuscarProdutoPorIdEstoqueEhIdProdutoAsync(
+        public Task<ProdutoEstoque> BuscarProdutoPorIdProdutoEhIdEstoqueAsync(
             int idProduto,
             int idEstoque
         );

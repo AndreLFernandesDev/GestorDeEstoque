@@ -33,12 +33,12 @@ namespace GestorDeEstoque.Repositories
                 Nome = produto.Nome,
                 Descricao = produto.Descricao,
                 Preco = produto.Preco,
-                Quantidade = produtoEstoque.Quantidade
+                Quantidade = produtoEstoque.Quantidade,
             };
             return produtoDTO;
         }
 
-        public async Task<bool> InserirProdutoAsync(int idEstoque,Produto novoProduto)
+        public async Task<bool> InserirProdutoAsync(int idEstoque, Produto novoProduto)
         {
             try
             {
@@ -66,7 +66,7 @@ namespace GestorDeEstoque.Repositories
                     Nome = pe.Produto.Nome,
                     Descricao = pe.Produto.Descricao,
                     Preco = pe.Produto.Preco,
-                    Quantidade = pe.Quantidade
+                    Quantidade = pe.Quantidade,
                 })
                 .ToListAsync();
             return produtos;
@@ -100,16 +100,22 @@ namespace GestorDeEstoque.Repositories
             return produto;
         }
 
-        public async Task<bool> RemoverProdutoAsync(int id)
+        public async Task<ProdutoDTO> RemoverProdutoAsync(int id)
         {
             var produto = await _context.Produtos.FindAsync(id);
             if (produto == null)
             {
-                return false;
+                throw new InvalidOperationException("Produto não encontrado");
             }
             _context.Remove(produto);
             _context.SaveChanges();
-            return true;
+            return new ProdutoDTO
+            {
+                Nome = produto.Nome,
+                Descricao = produto.Descricao,
+                Preco = produto.Preco,
+                Quantidade = 0,
+            };
         }
     }
 }
