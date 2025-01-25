@@ -245,8 +245,8 @@ namespace GestorDeEstoque.Controllers
             }
         }
 
-         [HttpPut("{idEstoque}/produtos/{idProduto}")]
-        public async Task<ActionResult<Produto>> AtualizarProduto(
+        [HttpPut("{idEstoque}/produtos/{idProduto}")]
+        public async Task<ActionResult<Produto>> AtualizarProdutoAsync(
             int idEstoque,
             [FromBody] Produto produtoAtualizado,
             int idProduto
@@ -263,7 +263,14 @@ namespace GestorDeEstoque.Controllers
                     produtoAtualizado,
                     idProduto
                 );
-                return Ok(new { produtoAtualizado.Nome, produtoAtualizado.Descricao, produtoAtualizado.Preco });
+                return Ok(
+                    new
+                    {
+                        produtoAtualizado.Nome,
+                        produtoAtualizado.Descricao,
+                        produtoAtualizado.Preco,
+                    }
+                );
             }
             catch (Exception ex)
             {
@@ -271,5 +278,26 @@ namespace GestorDeEstoque.Controllers
             }
         }
 
+        [HttpPatch("{idEstoque}/produtos/{idProduto}/quantidade")]
+        public async Task<ActionResult<ProdutoDTO>> AtualizarQuantidadeProdutoAsync(
+            int idEstoque,
+            int idProduto,
+            [FromBody] AtualizarQuantidadeProdutoDTO produtoQuantidadeDTO
+        )
+        {
+            try
+            {
+                var produtoDTO = await _produtoEstoqueRepository.AtualizarQuantidadeProdutoAsync(
+                    idEstoque,
+                    idProduto,
+                    produtoQuantidadeDTO
+                );
+                return Ok(produtoDTO);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { mensagem = ex.Message });
+            }
+        }
     }
 }
