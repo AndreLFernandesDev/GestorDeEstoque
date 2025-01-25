@@ -103,7 +103,7 @@ namespace GestorDeEstoque.Controllers
                 try
                 {
                     var produtoEstoque =
-                        await _produtoEstoqueRepository.BuscarProdutoPorIdEstoqueEhIdProdutoAsync(
+                        await _produtoEstoqueRepository.BuscarProdutoPorIdProdutoEhIdEstoqueAsync(
                             id,
                             idEstoque
                         );

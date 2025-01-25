@@ -14,7 +14,7 @@ namespace GestorDeEstoque.Repositories
             _context = context;
         }
 
-        public async Task<ProdutoEstoque> BuscarProdutoPorIdEstoqueEhIdProdutoAsync(
+        public async Task<ProdutoEstoque> BuscarProdutoPorIdProdutoEhIdEstoqueAsync(
             int idProduto,
             int idEstoque
         )
@@ -24,7 +24,7 @@ namespace GestorDeEstoque.Repositories
             );
             if (produtoEstoque == null)
             {
-                throw new Exception("Produto não existe");
+                throw new Exception("Produto ou estoque não existe");
             }
 
             return produtoEstoque;
