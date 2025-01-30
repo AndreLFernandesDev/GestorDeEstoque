@@ -305,17 +305,10 @@ namespace GestorDeEstoque.Controllers
             {
                 try
                 {
-                    var produtoEstoque =
-                        await _produtoEstoqueRepository.BuscarProdutoPorIdProdutoEhIdEstoqueAsync(
-                            idProduto,
-                            idEstoque
-                        );
-                    var produtoDeletado = await _produtoRepository.RemoverProdutoAsync(
-                        produtoEstoque.ProdutoId
-                    );
+                    var produtoDeletado = await _produtoRepository.RemoverProdutoAsync(idProduto);
                     await _produtoEstoqueRepository.RemoverQuantidadeProdutoAsync(
-                        produtoEstoque.ProdutoId,
-                        produtoEstoque.EstoqueId
+                        idProduto,
+                        idEstoque
                     );
                     await _context.SaveChangesAsync();
                     await transaction.CommitAsync();
