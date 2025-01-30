@@ -222,9 +222,7 @@ namespace GestorDeEstoque.Controllers
                     Quantidade = novoProdutoDTO.Quantidade,
                 };
 
-                await _produtoEstoqueRepository.CriarProdutoOuInserirQuantidadeAsync(
-                    produtoEstoque
-                );
+                await _produtoEstoqueRepository.CriarProdutoAsync(produtoEstoque);
                 await _context.SaveChangesAsync();
 
                 await transaction.CommitAsync();
