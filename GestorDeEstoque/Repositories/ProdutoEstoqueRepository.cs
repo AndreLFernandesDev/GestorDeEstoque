@@ -30,7 +30,7 @@ namespace GestorDeEstoque.Repositories
             return produtoEstoque;
         }
 
-        public async Task CriarProdutoOuInserirQuantidadeAsync(ProdutoEstoque produtoEstoque)
+        public async Task CriarProdutoAsync(ProdutoEstoque produtoEstoque)
         {
             var produtoEstoqueExistente = await _context.ProdutosEstoques.FirstOrDefaultAsync(pe =>
                 pe.ProdutoId == produtoEstoque.ProdutoId && pe.EstoqueId == produtoEstoque.EstoqueId

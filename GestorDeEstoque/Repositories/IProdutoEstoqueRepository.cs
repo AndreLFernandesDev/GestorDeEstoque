@@ -9,7 +9,7 @@ namespace GestorDeEstoque.Repositories
             int idProduto,
             int idEstoque
         );
-        public Task CriarProdutoOuInserirQuantidadeAsync(ProdutoEstoque produtoEstoque);
+        public Task CriarProdutoAsync(ProdutoEstoque produtoEstoque);
         public Task<ProdutoDTO> AtualizarQuantidadeProdutoAsync(
             int idEstoque,
             int idProduto,
