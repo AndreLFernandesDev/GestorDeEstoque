@@ -11,7 +11,7 @@ namespace GestorDeEstoque.Repositories
 
         public Task<bool> AdicionarEstoqueAsync(Estoque novoEstoque);
 
-        public Task<bool> AtualizarEstoqueAsync(int idEstoque,Estoque estoqueAtualizado);
+        public Task<Estoque> AtualizarEstoqueAsync(int idEstoque, Estoque estoqueAtualizado);
 
         public Task<bool> RemoverEstoqueAsync(int idEstoque);
     }

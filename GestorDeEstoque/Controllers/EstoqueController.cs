@@ -105,7 +105,7 @@ namespace GestorDeEstoque.Controllers
         }
 
         [HttpPut("{idEstoque}")]
-        public async Task<ActionResult<bool>> AtualizarEstoqueAsync(
+        public async Task<ActionResult<Estoque>> AtualizarEstoqueAsync(
             int idEstoque,
             [FromBody] Estoque estoqueAtualizado
         )
@@ -116,11 +116,11 @@ namespace GestorDeEstoque.Controllers
                     idEstoque,
                     estoqueAtualizado
                 );
-                if (resultado == false)
+                if (resultado == null)
                 {
                     return NotFound("Estoque não encontrado");
                 }
-                return Ok(estoqueAtualizado);
+                return Ok(resultado);
             }
             catch (Exception ex)
             {

@@ -50,14 +50,14 @@ namespace GestorDeEstoque.Repositories
             }
         }
 
-        public async Task<bool> AtualizarEstoqueAsync(int idEstoque, Estoque estoqueAtualizado)
+        public async Task<Estoque> AtualizarEstoqueAsync(int idEstoque, Estoque estoqueAtualizado)
         {
             try
             {
                 var estoque = await _context.Estoques.FindAsync(idEstoque);
                 if (estoque == null)
                 {
-                    return false;
+                    throw new Exception("Estoque não encontrado");
                 }
                 estoque.Nome = estoqueAtualizado.Nome;
                 _context.Estoques.Update(estoque);
@@ -68,7 +68,7 @@ namespace GestorDeEstoque.Repositories
                         "Estoque não atualizado, nenhuma alteração feita no banco de dados"
                     );
                 }
-                return true;
+                return estoque;
             }
             catch
             {
