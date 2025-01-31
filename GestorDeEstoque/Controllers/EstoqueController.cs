@@ -112,14 +112,15 @@ namespace GestorDeEstoque.Controllers
         {
             try
             {
+                var estoqueExiste = await _estoqueRepository.BuscarEstoquePorIdAsync(idEstoque);
+                if (estoqueExiste == null)
+                {
+                    return NotFound("Estoque não encontrado");
+                }
                 var resultado = await _estoqueRepository.AtualizarEstoqueAsync(
                     idEstoque,
                     estoqueAtualizado
                 );
-                if (resultado == null)
-                {
-                    return NotFound("Estoque não encontrado");
-                }
                 return Ok(resultado);
             }
             catch (Exception ex)
@@ -133,11 +134,12 @@ namespace GestorDeEstoque.Controllers
         {
             try
             {
-                var resultado = await _estoqueRepository.RemoverEstoqueAsync(idEstoque);
-                if (resultado == false)
+                var estoqueExiste = await _estoqueRepository.BuscarEstoquePorIdAsync(idEstoque);
+                if (estoqueExiste == null)
                 {
                     return NotFound("Estoque não encontrado");
                 }
+                var resultado = await _estoqueRepository.RemoverEstoqueAsync(idEstoque);
                 return Ok(new { mensagem = "Estoque deletado" });
             }
             catch (Exception ex)
@@ -151,6 +153,11 @@ namespace GestorDeEstoque.Controllers
         {
             try
             {
+                var estoqueExiste = await _context.Estoques.FindAsync(idEstoque);
+                if (estoqueExiste == null)
+                {
+                    return NotFound("Estoque não encontrado");
+                }
                 var produtos = await _produtoRepository.ListarProdutosAsync(idEstoque);
                 if (produtos == null)
                 {
@@ -169,11 +176,11 @@ namespace GestorDeEstoque.Controllers
         {
             try
             {
-                var produto = await _produtoRepository.BuscaPorIdProdutoEhIdEstoqueAsync(
+                var produto = await _produtoRepository.BuscaPorIdEstoqueEhIdProdutoAsync(
                     idEstoque,
                     idProduto
                 );
-                if (produto == null)
+                if (produto == false)
                 {
                     return NotFound(new { mensagem = "Estoque ou produto não encontrado" });
                 }
@@ -192,11 +199,18 @@ namespace GestorDeEstoque.Controllers
         )
         {
             using var transaction = _context.Database.BeginTransaction();
+
             try
             {
                 if (!ModelState.IsValid)
                 {
                     return BadRequest(ModelState);
+                }
+
+                var estoqueExiste = await _context.Estoques.FindAsync(idEstoque);
+                if (estoqueExiste == null)
+                {
+                    return NotFound(new { mensagem = "Estoque não encontrado" });
                 }
                 var produto = new Produto
                 {
@@ -204,15 +218,7 @@ namespace GestorDeEstoque.Controllers
                     Descricao = novoProdutoDTO.Descricao,
                     Preco = novoProdutoDTO.Preco,
                 };
-
-                var estoqueExiste = await _produtoRepository.InserirProdutoAsync(
-                    idEstoque,
-                    produto
-                );
-                if (!estoqueExiste)
-                {
-                    return NotFound(new { mensagem = "Estoque não encontrado" });
-                }
+                await _produtoRepository.InserirProdutoAsync(idEstoque, produto);
                 await _context.SaveChangesAsync();
 
                 var produtoEstoque = new ProdutoEstoque
@@ -256,17 +262,26 @@ namespace GestorDeEstoque.Controllers
                 {
                     return BadRequest("Dados inválidos do produto");
                 }
+                var produtoEstoqueExiste =
+                    await _produtoRepository.BuscaPorIdEstoqueEhIdProdutoAsync(
+                        idEstoque,
+                        idProduto
+                    );
+                if (produtoEstoqueExiste == false)
+                {
+                    return NotFound(new { mensagem = "Produto ou estoque não encontrado" });
+                }
                 await _produtoRepository.AtualizarProdutoAsync(
                     idEstoque,
                     produtoAtualizado,
                     idProduto
                 );
                 return Ok(
-                    new
+                    new Produto
                     {
-                        produtoAtualizado.Nome,
-                        produtoAtualizado.Descricao,
-                        produtoAtualizado.Preco,
+                        Nome = produtoAtualizado.Nome,
+                        Descricao = produtoAtualizado.Descricao,
+                        Preco = produtoAtualizado.Preco,
                     }
                 );
             }
@@ -277,7 +292,7 @@ namespace GestorDeEstoque.Controllers
         }
 
         [HttpPatch("{idEstoque}/produtos/{idProduto}/quantidade")]
-        public async Task<ActionResult<ProdutoDTO>> AtualizarQuantidadeProdutoAsync(
+        public async Task<ActionResult<ProdutoEstoque>> AtualizarQuantidadeProdutoAsync(
             int idEstoque,
             int idProduto,
             [FromBody] AtualizarQuantidadeProdutoDTO produtoQuantidadeDTO
@@ -285,12 +300,22 @@ namespace GestorDeEstoque.Controllers
         {
             try
             {
-                var produtoDTO = await _produtoEstoqueRepository.AtualizarQuantidadeProdutoAsync(
-                    idEstoque,
-                    idProduto,
-                    produtoQuantidadeDTO
-                );
-                return Ok(produtoDTO);
+                var produtoEstoqueExiste =
+                    await _produtoEstoqueRepository.BuscarProdutoPorIdProdutoEhIdEstoqueAsync(
+                        idProduto,
+                        idEstoque
+                    );
+                if (produtoEstoqueExiste == null)
+                {
+                    return NotFound(new { mensagem = "Produto ou estoque não encontrado" });
+                }
+                var produtoEstoque =
+                    await _produtoEstoqueRepository.AtualizarQuantidadeProdutoAsync(
+                        idEstoque,
+                        idProduto,
+                        produtoQuantidadeDTO
+                    );
+                return Ok(produtoEstoque);
             }
             catch (Exception ex)
             {
@@ -305,6 +330,15 @@ namespace GestorDeEstoque.Controllers
             {
                 try
                 {
+                    var produtoEstoqueExiste =
+                        await _produtoRepository.BuscaPorIdEstoqueEhIdProdutoAsync(
+                            idEstoque,
+                            idProduto
+                        );
+                    if (produtoEstoqueExiste == false)
+                    {
+                        return NotFound(new { mensagem = "Produto ou estoque não encontrado" });
+                    }
                     var produtoDeletado = await _produtoRepository.RemoverProdutoAsync(idProduto);
                     await _produtoEstoqueRepository.RemoverQuantidadeProdutoAsync(
                         idProduto,
@@ -312,7 +346,7 @@ namespace GestorDeEstoque.Controllers
                     );
                     await _context.SaveChangesAsync();
                     await transaction.CommitAsync();
-                    return Ok(new { mensagem = $"Produto deletado: {produtoDeletado.Nome}" });
+                    return Ok(new { mensagem = "Produto deletado" });
                 }
                 catch (Exception ex)
                 {
