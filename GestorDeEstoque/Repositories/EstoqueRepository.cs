@@ -22,83 +22,50 @@ namespace GestorDeEstoque.Repositories
                 .ToListAsync();
         }
 
-        public async Task<EstoqueDTO?> BuscarEstoquePorIdAsync(int id)
+        public async Task<Estoque> BuscarEstoquePorIdAsync(int id)
         {
-            var estoque = await _context
-                .Estoques.Select(e => new EstoqueDTO { Id = e.Id, Nome = e.Nome })
-                .FirstOrDefaultAsync(e => e.Id == id);
+            var estoque = await _context.Estoques.FirstOrDefaultAsync(e => e.Id == id);
             return estoque;
         }
 
         public async Task<bool> AdicionarEstoqueAsync(Estoque novoEstoque)
         {
-            try
+            _context.Estoques.Add(novoEstoque);
+            var resultado = await _context.SaveChangesAsync();
+            if (resultado == 0)
             {
-                _context.Estoques.Add(novoEstoque);
-                var resultado = await _context.SaveChangesAsync();
-                if (resultado == 0)
-                {
-                    throw new Exception(
-                        "Estoque não adicionado, nenhuma alteração feita no banco de dados"
-                    );
-                }
-                return true;
+                return false;
             }
-            catch (Exception)
-            {
-                throw;
-            }
+            return true;
         }
 
         public async Task<Estoque> AtualizarEstoqueAsync(int idEstoque, Estoque estoqueAtualizado)
         {
-            try
+            var estoque = await _context.Estoques.FindAsync(idEstoque);
+            estoque.Nome = estoqueAtualizado.Nome;
+            _context.Estoques.Update(estoque);
+            var resultado = await _context.SaveChangesAsync();
+            if (resultado == 0)
             {
-                var estoque = await _context.Estoques.FindAsync(idEstoque);
-                if (estoque == null)
-                {
-                    throw new Exception("Estoque não encontrado");
-                }
-                estoque.Nome = estoqueAtualizado.Nome;
-                _context.Estoques.Update(estoque);
-                var resultado = await _context.SaveChangesAsync();
-                if (resultado == 0)
-                {
-                    throw new Exception(
-                        "Estoque não atualizado, nenhuma alteração feita no banco de dados"
-                    );
-                }
-                return estoque;
+                throw new Exception(
+                    "Estoque não atualizado, nenhuma alteração feita no banco de dados"
+                );
             }
-            catch
-            {
-                throw;
-            }
+            return estoque;
         }
 
         public async Task<bool> RemoverEstoqueAsync(int idEstoque)
         {
-            try
+            var estoque = await _context.Estoques.FindAsync(idEstoque);
+            _context.Estoques.Remove(estoque);
+            var resultado = await _context.SaveChangesAsync();
+            if (resultado == 0)
             {
-                var estoque = await _context.Estoques.FindAsync(idEstoque);
-                if (estoque == null)
-                {
-                    return false;
-                }
-                _context.Estoques.Remove(estoque);
-                var resultado = await _context.SaveChangesAsync();
-                if (resultado == 0)
-                {
-                    throw new Exception(
-                        "Estoque não deletado, nenhuma alteração feita no banco de dados"
-                    );
-                }
-                return true;
+                throw new Exception(
+                    "Estoque não deletado, nenhuma alteração feita no banco de dados"
+                );
             }
-            catch
-            {
-                throw;
-            }
+            return true;
         }
     }
 }

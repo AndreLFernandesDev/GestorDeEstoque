@@ -7,7 +7,7 @@ namespace GestorDeEstoque.Repositories
     {
         public Task<IEnumerable<EstoqueDTO>> ListarEstoquesAsync();
 
-        public Task<EstoqueDTO> BuscarEstoquePorIdAsync(int id);
+        public Task<Estoque> BuscarEstoquePorIdAsync(int id);
 
         public Task<bool> AdicionarEstoqueAsync(Estoque novoEstoque);
 
