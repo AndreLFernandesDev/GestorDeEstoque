@@ -9,7 +9,7 @@ namespace GestorDeEstoque.Repositories
 
         public Task<Estoque> BuscarEstoquePorIdAsync(int id);
 
-        public Task<bool> AdicionarEstoqueAsync(Estoque novoEstoque);
+        public Task<Estoque> AdicionarEstoqueAsync(Estoque novoEstoque);
 
         public Task<Estoque> AtualizarEstoqueAsync(int idEstoque, Estoque estoqueAtualizado);
 
