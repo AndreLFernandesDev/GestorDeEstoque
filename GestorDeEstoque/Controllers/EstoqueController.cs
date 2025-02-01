@@ -92,11 +92,11 @@ namespace GestorDeEstoque.Controllers
             try
             {
                 var resultado = await _estoqueRepository.AdicionarEstoqueAsync(novoEstoque);
-                if (resultado == false)
+                if (resultado == null)
                 {
                     return BadRequest("Estoque não adicionado");
                 }
-                return Ok(novoEstoque);
+                return Ok(resultado);
             }
             catch (Exception ex)
             {
@@ -112,8 +112,8 @@ namespace GestorDeEstoque.Controllers
         {
             try
             {
-                var estoqueExiste = await _estoqueRepository.BuscarEstoquePorIdAsync(idEstoque);
-                if (estoqueExiste == null)
+                var estoqueExistente = await _estoqueRepository.BuscarEstoquePorIdAsync(idEstoque);
+                if (estoqueExistente == null)
                 {
                     return NotFound("Estoque não encontrado");
                 }
@@ -134,8 +134,8 @@ namespace GestorDeEstoque.Controllers
         {
             try
             {
-                var estoqueExiste = await _estoqueRepository.BuscarEstoquePorIdAsync(idEstoque);
-                if (estoqueExiste == null)
+                var estoqueExistente = await _estoqueRepository.BuscarEstoquePorIdAsync(idEstoque);
+                if (estoqueExistente == null)
                 {
                     return NotFound("Estoque não encontrado");
                 }
@@ -153,8 +153,8 @@ namespace GestorDeEstoque.Controllers
         {
             try
             {
-                var estoqueExiste = await _context.Estoques.FindAsync(idEstoque);
-                if (estoqueExiste == null)
+                var estoqueExistente = await _context.Estoques.FindAsync(idEstoque);
+                if (estoqueExistente == null)
                 {
                     return NotFound("Estoque não encontrado");
                 }
@@ -172,7 +172,7 @@ namespace GestorDeEstoque.Controllers
         }
 
         [HttpGet("{idEstoque}/produtos/{idProduto}")]
-        public async Task<IActionResult> BuscarProdutoPorId(int idEstoque, int idProduto)
+        public async Task<ActionResult<Produto>> BuscarProdutoPorId(int idEstoque, int idProduto)
         {
             try
             {
@@ -180,7 +180,7 @@ namespace GestorDeEstoque.Controllers
                     idEstoque,
                     idProduto
                 );
-                if (produto == false)
+                if (produto == null)
                 {
                     return NotFound(new { mensagem = "Estoque ou produto não encontrado" });
                 }
@@ -207,8 +207,8 @@ namespace GestorDeEstoque.Controllers
                     return BadRequest(ModelState);
                 }
 
-                var estoqueExiste = await _context.Estoques.FindAsync(idEstoque);
-                if (estoqueExiste == null)
+                var estoqueExistente = await _context.Estoques.FindAsync(idEstoque);
+                if (estoqueExistente == null)
                 {
                     return NotFound(new { mensagem = "Estoque não encontrado" });
                 }
@@ -262,12 +262,12 @@ namespace GestorDeEstoque.Controllers
                 {
                     return BadRequest("Dados inválidos do produto");
                 }
-                var produtoEstoqueExiste =
+                var produtoEstoqueExistente =
                     await _produtoRepository.BuscaPorIdEstoqueEhIdProdutoAsync(
                         idEstoque,
                         idProduto
                     );
-                if (produtoEstoqueExiste == false)
+                if (produtoEstoqueExistente == null)
                 {
                     return NotFound(new { mensagem = "Produto ou estoque não encontrado" });
                 }
@@ -300,12 +300,12 @@ namespace GestorDeEstoque.Controllers
         {
             try
             {
-                var produtoEstoqueExiste =
+                var produtoEstoqueExistente =
                     await _produtoEstoqueRepository.BuscarProdutoPorIdProdutoEhIdEstoqueAsync(
                         idProduto,
                         idEstoque
                     );
-                if (produtoEstoqueExiste == null)
+                if (produtoEstoqueExistente == null)
                 {
                     return NotFound(new { mensagem = "Produto ou estoque não encontrado" });
                 }
@@ -330,12 +330,12 @@ namespace GestorDeEstoque.Controllers
             {
                 try
                 {
-                    var produtoEstoqueExiste =
+                    var produtoEstoqueExistente =
                         await _produtoRepository.BuscaPorIdEstoqueEhIdProdutoAsync(
                             idEstoque,
                             idProduto
                         );
-                    if (produtoEstoqueExiste == false)
+                    if (produtoEstoqueExistente == null)
                     {
                         return NotFound(new { mensagem = "Produto ou estoque não encontrado" });
                     }

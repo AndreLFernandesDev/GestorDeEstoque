@@ -15,17 +15,14 @@ namespace GestorDeEstoque.Repositories
             _context = context;
         }
 
-        public async Task<bool> BuscaPorIdEstoqueEhIdProdutoAsync(int idEstoque, int idProduto)
+        public async Task<Produto> BuscaPorIdEstoqueEhIdProdutoAsync(int idEstoque, int idProduto)
         {
             var produto = await _context.Produtos.FirstOrDefaultAsync(p => p.Id == idProduto);
-            var produtoEstoque = await _context.ProdutosEstoques.FirstOrDefaultAsync(pe =>
-                pe.ProdutoId == idProduto && pe.EstoqueId == idEstoque
-            );
-            if (produto == null || produtoEstoque == null)
+            if (produto == null)
             {
-                return false;
+                throw new Exception("Produto não encontrado");
             }
-            return true;
+            return produto;
         }
 
         public async Task<bool> InserirProdutoAsync(int idEstoque, Produto novoProduto)
