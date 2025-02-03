@@ -1,0 +1,17 @@
+meta {
+  name: AdicionarEstoque
+  type: http
+  seq: 11
+}
+
+post {
+  url: {{URL_PADRAO}}/estoques
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "Nome":"Estoque 5"
+  }
+}

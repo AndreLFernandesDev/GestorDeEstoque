@@ -6,6 +6,5 @@ namespace GestorDeEstoque.DTOs
         public required string Descricao { get; set; }
         public required decimal Preco { get; set; }
         public required decimal Quantidade { get; set; }
-        public required int EstoqueId { get; set; }
     }
 }
