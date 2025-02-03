@@ -1,0 +1,17 @@
+meta {
+  name: AtualizarQuantidadeProduto
+  type: http
+  seq: 6
+}
+
+patch {
+  url: {{URL_PADRAO}}/estoques/2/produtos/2/quantidade
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "Quantidade":-122
+  }
+}

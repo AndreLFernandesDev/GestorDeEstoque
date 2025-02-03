@@ -1,10 +1,20 @@
+using GestorDeEstoque.DTOs;
 using GestorDeEstoque.Models;
+
 namespace GestorDeEstoque.Repositories
 {
     public interface IProdutoEstoqueRepository
     {
-        public Task<ProdutoEstoque> BuscarProdutoPorIdEstoqueEhIdProdutoAsync(int idProduto, int idEstoque);
-        public Task CriarProdutoOuInserirQuantidadeAsync(ProdutoEstoque produtoEstoque);
+        public Task<ProdutoEstoque> BuscarProdutoPorIdProdutoEhIdEstoqueAsync(
+            int idProduto,
+            int idEstoque
+        );
+        public Task CriarProdutoAsync(ProdutoEstoque produtoEstoque);
+        public Task<ProdutoEstoque> AtualizarQuantidadeProdutoAsync(
+            int idEstoque,
+            int idProduto,
+            AtualizarQuantidadeProdutoDTO quantidadeProdutoDTO
+        );
         public Task<bool> RemoverQuantidadeProdutoAsync(int idProduto, int idEstoque);
     }
 }

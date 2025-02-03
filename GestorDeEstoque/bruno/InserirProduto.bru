@@ -1,22 +1,21 @@
 meta {
-  name: Adicionar produto
+  name: InserirProduto
   type: http
   seq: 2
 }
 
 post {
-  url: {{URL_PADRAO}}/produtos
+  url: {{URL_PADRAO}}/estoques/2/produtos
   body: json
   auth: none
 }
 
 body:json {
   {
-    "Nome":"Arroz codil",
+    "Nome":"Bolacha marilam",
     "Quantidade":200,
-    "Descricao":"T1",
-    "preco":50,
-    "EstoqueId":1
+    "Descricao":"100",
+    "preco":50
   }
 }
 

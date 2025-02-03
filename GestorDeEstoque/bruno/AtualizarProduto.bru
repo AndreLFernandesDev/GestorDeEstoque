@@ -1,0 +1,19 @@
+meta {
+  name: AtualizarProduto
+  type: http
+  seq: 4
+}
+
+put {
+  url: {{URL_PADRAO}}/estoques/2/produtos/3
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "Nome":"Arroz codil plus",
+    "Descricao":"T1",
+    "preco":100
+  }
+}
