@@ -30,7 +30,7 @@ namespace GestorDeEstoque.Repositories
             try
             {
                 await _context.Produtos.AddAsync(novoProduto);
-                return _context.SaveChanges() > 0;
+                return await _context.SaveChangesAsync() > 0;
             }
             catch
             {
