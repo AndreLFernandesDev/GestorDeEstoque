@@ -202,11 +202,6 @@ namespace GestorDeEstoque.Controllers
 
             try
             {
-                if (!ModelState.IsValid)
-                {
-                    return BadRequest(ModelState);
-                }
-
                 var estoqueExistente = await _context.Estoques.FindAsync(idEstoque);
                 if (estoqueExistente == null)
                 {
@@ -231,6 +226,12 @@ namespace GestorDeEstoque.Controllers
                 await _produtoEstoqueRepository.CriarProdutoAsync(produtoEstoque);
                 await _context.SaveChangesAsync();
 
+                await _logRepository.RegistrarLogEstoqueAsync(
+                    produto.Id,
+                    produtoEstoque.Quantidade,
+                    idEstoque
+                );
+
                 await transaction.CommitAsync();
 
                 var produtoDTO = new ProdutoDTO
@@ -240,6 +241,7 @@ namespace GestorDeEstoque.Controllers
                     Preco = produto.Preco,
                     Quantidade = produtoEstoque.Quantidade,
                 };
+
                 return Ok(produtoDTO);
             }
             catch (Exception ex)
@@ -298,6 +300,7 @@ namespace GestorDeEstoque.Controllers
             [FromBody] AtualizarQuantidadeProdutoDTO produtoQuantidadeDTO
         )
         {
+            using var transaction = _context.Database.BeginTransaction();
             try
             {
                 var produtoEstoqueExistente =
@@ -315,10 +318,22 @@ namespace GestorDeEstoque.Controllers
                         idProduto,
                         produtoQuantidadeDTO
                     );
+                await _context.SaveChangesAsync();
+
+                await _logRepository.RegistrarLogEstoqueAsync(
+                    idProduto,
+                    produtoEstoque.Quantidade,
+                    idEstoque
+                );
+                await _context.SaveChangesAsync();
+
+                await transaction.CommitAsync();
+
                 return Ok(produtoEstoque);
             }
             catch (Exception ex)
             {
+                await transaction.RollbackAsync();
                 return BadRequest(new { mensagem = ex.Message });
             }
         }
