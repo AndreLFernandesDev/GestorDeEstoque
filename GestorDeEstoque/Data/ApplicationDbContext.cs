@@ -35,12 +35,10 @@ namespace GestorDeEstoque.Data
 
             modelBuilder.Entity<Produto>()
                 .Property(p => p.Nome)
-                .IsRequired()
-                .HasMaxLength(100);
+                .IsRequired();
 
             modelBuilder.Entity<Produto>()
-            .Property(p => p.Descricao)
-            .HasMaxLength(100);
+            .Property(p => p.Descricao);
 
             modelBuilder.Entity<Produto>()
             .Property(p => p.Preco)
@@ -49,7 +47,7 @@ namespace GestorDeEstoque.Data
             // Tabela Estoque
             modelBuilder.Entity<Estoque>().HasKey(e => e.Id);
 
-            modelBuilder.Entity<Estoque>().Property(e => e.Nome).IsRequired().HasMaxLength(100);
+            modelBuilder.Entity<Estoque>().Property(e => e.Nome).IsRequired();
 
             //Tabela LogEstoque
             modelBuilder.Entity<LogEstoque>().HasKey(l => l.Id);
