@@ -33,7 +33,7 @@ namespace GestorDeEstoque.Repositories
         public async Task CriarProdutoAsync(ProdutoEstoque produtoEstoque)
         {
             produtoEstoque.Quantidade += produtoEstoque.Quantidade;
-            _context.ProdutosEstoques.Update(produtoEstoque);
+            await _context.ProdutosEstoques.AddAsync(produtoEstoque);
             await _context.SaveChangesAsync();
         }
 
