@@ -1,0 +1,18 @@
+meta {
+  name: Criar usuario
+  type: http
+  seq: 14
+}
+
+post {
+  url: {{URL_PADRAO}}/login
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "NomeUsuario":"Andre",
+    "SenhaHash":"123"
+  }
+}
