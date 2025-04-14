@@ -13,23 +13,21 @@ namespace GestorDeEstoque.Repositories
             _context = context;
         }
 
-        public async Task<Usuario> BuscarUsuarioPorNomeUsuarioAsync(string nomeUsuario)
+        public async Task<Usuario> BuscarUsuarioPorEmailAsync(string email)
         {
-            var usuario = await _context.Usuarios.FirstOrDefaultAsync(u =>
-                u.NomeUsuario == nomeUsuario
-            );
+            var usuario = await _context.Usuarios.FirstOrDefaultAsync(u => u.Email == email);
             if (usuario == null)
             {
-                throw new Exception("Usuário não encontrado");
+                return null!;
             }
             return usuario;
         }
 
-        public async Task<Usuario> CriarUsuarioAsync(string nomeUsuario, string senha)
+        public async Task<Usuario> CriarUsuarioAsync(string email, string senha)
         {
             {
                 var senhaHash = BCrypt.Net.BCrypt.HashPassword(senha);
-                var usuario = new Usuario { NomeUsuario = nomeUsuario, SenhaHash = senhaHash };
+                var usuario = new Usuario { Email = email, SenhaHash = senhaHash };
                 _context.Usuarios.Add(usuario);
                 await _context.SaveChangesAsync();
                 return usuario;
