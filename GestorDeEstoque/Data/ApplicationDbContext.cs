@@ -81,9 +81,9 @@ namespace GestorDeEstoque.Data
 
             //Tabela Usuario
             modelBuilder.Entity<Usuario>().HasKey(u => u.Id);
-            modelBuilder.Entity<Usuario>().Property(u => u.NomeUsuario).IsRequired();
+            modelBuilder.Entity<Usuario>().Property(u => u.Email).IsRequired();
             modelBuilder.Entity<Usuario>().Property(u => u.SenhaHash).IsRequired();
-            modelBuilder.Entity<Usuario>().HasIndex(u => u.NomeUsuario).IsUnique();
+            modelBuilder.Entity<Usuario>().HasIndex(u => u.Email).IsUnique();
         }
     }
 }

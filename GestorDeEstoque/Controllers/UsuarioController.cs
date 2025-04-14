@@ -1,4 +1,5 @@
 using GestorDeEstoque.Data;
+using GestorDeEstoque.DTOs;
 using GestorDeEstoque.Models;
 using GestorDeEstoque.Repositories;
 using Microsoft.AspNetCore.Mvc;
@@ -6,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace GestorDeEstoque.Controllers
 {
     [ApiController]
-    [Route("/login")]
+    [Route("/usuario")]
     public class LoginController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
@@ -19,19 +20,17 @@ namespace GestorDeEstoque.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CriarUsuarioAsync([FromBody] Usuario usuario)
+        public async Task<IActionResult> CriarUsuarioAsync([FromBody] UsuarioDTO usuario)
         {
-            var usuarioExiste = await _usuarioRepository.BuscarUsuarioPorNomeUsuarioAsync(
-                usuario.NomeUsuario
-            );
+            var usuarioExiste = await _usuarioRepository.BuscarUsuarioPorEmailAsync(usuario.Email);
             if (usuarioExiste != null)
             {
-                return BadRequest("Nome de usuário já existe");
+                return BadRequest("Este email já foi cadastrado");
             }
             try
             {
                 var usuarioCriado = await _usuarioRepository.CriarUsuarioAsync(
-                    usuario.NomeUsuario,
+                    usuario.Email,
                     usuario.SenhaHash
                 );
                 return Ok(usuarioCriado);
