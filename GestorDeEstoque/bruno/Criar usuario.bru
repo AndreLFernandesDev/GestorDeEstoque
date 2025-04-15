@@ -1,0 +1,18 @@
+meta {
+  name: Criar usuario
+  type: http
+  seq: 14
+}
+
+post {
+  url: {{URL_PADRAO}}/usuarios
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "Email":"luiz11@gmail.com",
+    "SenhaHash":"123"
+  }
+}
