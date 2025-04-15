@@ -7,13 +7,13 @@ using Microsoft.AspNetCore.Mvc;
 namespace GestorDeEstoque.Controllers
 {
     [ApiController]
-    [Route("/usuario")]
-    public class LoginController : ControllerBase
+    [Route("/usuarios")]
+    public class UsuarioController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
         private UsuarioRepository _usuarioRepository;
 
-        public LoginController(ApplicationDbContext context, UsuarioRepository usuarioRepository)
+        public UsuarioController(ApplicationDbContext context, UsuarioRepository usuarioRepository)
         {
             _context = context;
             _usuarioRepository = usuarioRepository;
@@ -22,8 +22,10 @@ namespace GestorDeEstoque.Controllers
         [HttpPost]
         public async Task<IActionResult> CriarUsuarioAsync([FromBody] UsuarioDTO usuario)
         {
-            var usuarioExiste = await _usuarioRepository.BuscarUsuarioPorEmailAsync(usuario.Email);
-            if (usuarioExiste != null)
+            var usuarioExistente = await _usuarioRepository.BuscarUsuarioPorEmailAsync(
+                usuario.Email
+            );
+            if (usuarioExistente != null)
             {
                 return BadRequest("Este email já foi cadastrado");
             }
