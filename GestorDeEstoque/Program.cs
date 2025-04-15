@@ -18,6 +18,7 @@ builder.Services.AddScoped<ProdutoRepository>();
 builder.Services.AddScoped<EstoqueRepository>();
 builder.Services.AddScoped<LogRepository>();
 builder.Services.AddScoped<ProdutoEstoqueRepository>();
+builder.Services.AddScoped<UsuarioRepository>();
 
 var app = builder.Build();
 
