@@ -1,6 +1,7 @@
 using GestorDeEstoque.Data;
 using GestorDeEstoque.Models;
 using Microsoft.EntityFrameworkCore;
+using Bcrypt = BCrypt.Net.BCrypt;
 
 namespace GestorDeEstoque.Repositories
 {
@@ -26,7 +27,7 @@ namespace GestorDeEstoque.Repositories
         public async Task<Usuario> CriarUsuarioAsync(string email, string senha)
         {
             {
-                var senhaHash = BCrypt.Net.BCrypt.HashPassword(senha);
+                var senhaHash = Bcrypt.HashPassword(senha);
                 var usuario = new Usuario { Email = email, SenhaHash = senhaHash };
                 _context.Usuarios.Add(usuario);
                 await _context.SaveChangesAsync();
