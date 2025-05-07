@@ -16,12 +16,7 @@ namespace GestorDeEstoque.Repositories
 
         public async Task<Usuario> BuscarUsuarioPorEmailAsync(string email)
         {
-            var usuario = await _context.Usuarios.FirstOrDefaultAsync(u => u.Email == email);
-            if (usuario == null)
-            {
-                return null!;
-            }
-            return usuario;
+            return await _context.Usuarios.FirstOrDefaultAsync(u => u.Email == email);
         }
 
         public async Task<Usuario> CriarUsuarioAsync(string email, string senha)

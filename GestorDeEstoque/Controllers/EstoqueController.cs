@@ -2,12 +2,14 @@ using GestorDeEstoque.Data;
 using GestorDeEstoque.DTOs;
 using GestorDeEstoque.Models;
 using GestorDeEstoque.Repositories;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GestorDeEstoque.Controllers
 {
     [ApiController]
     [Route("/estoques")]
+    [Authorize]
     public class EstoqueController : ControllerBase
     {
         private readonly ApplicationDbContext _context;

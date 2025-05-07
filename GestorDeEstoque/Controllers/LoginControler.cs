@@ -2,6 +2,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using GestorDeEstoque.DTOs;
+using GestorDeEstoque.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 
@@ -12,16 +13,28 @@ namespace GestorDeEstoque.Controllers
     public class LoginController : ControllerBase
     {
         private readonly IConfiguration _configuration;
+        private UsuarioRepository _usuarioRepository;
 
-        public LoginController(IConfiguration configuration)
+        public LoginController(IConfiguration configuration, UsuarioRepository usuarioRepository)
         {
             _configuration = configuration;
+            _usuarioRepository = usuarioRepository;
         }
 
         [HttpPost("login")]
-        public IActionResult Login([FromBody] UsuarioDTO usuario)
+        public async Task<IActionResult> Login([FromBody] UsuarioDTO usuario)
         {
-            if (usuario.Email == "email" && usuario.SenhaHash == "senha")
+            var usuarioEncontrado = await _usuarioRepository.BuscarUsuarioPorEmailAsync(
+                usuario.Email
+            );
+
+            if (
+                usuarioEncontrado == null
+                || !BCrypt.Net.BCrypt.Verify(usuario.Senha, usuarioEncontrado.SenhaHash)
+            )
+            {
+                return Unauthorized("Usuário ou senha inválidos.");
+            }
             {
                 var claims = new[]
                 {
@@ -49,7 +62,6 @@ namespace GestorDeEstoque.Controllers
 
                 return Ok(new { Token = jwtToken });
             }
-            return Unauthorized("Usuário ou senha inválidos.");
         }
     }
 }
