@@ -8,7 +8,7 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace GestorDeEstoque.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/auth/")]
     [ApiController]
     public class LoginController : ControllerBase
     {
