@@ -8,14 +8,14 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace GestorDeEstoque.Controllers
 {
-    [Route("api/auth/")]
+    [Route("api/[controller]")]
     [ApiController]
-    public class LoginController : ControllerBase
+    public class AuthController : ControllerBase
     {
         private readonly IConfiguration _configuration;
         private UsuarioRepository _usuarioRepository;
 
-        public LoginController(IConfiguration configuration, UsuarioRepository usuarioRepository)
+        public AuthController(IConfiguration configuration, UsuarioRepository usuarioRepository)
         {
             _configuration = configuration;
             _usuarioRepository = usuarioRepository;
@@ -51,7 +51,7 @@ namespace GestorDeEstoque.Controllers
                     issuer: _configuration["Jwt:Issuer"],
                     audience: _configuration["Jwt:Audience"],
                     claims: claims,
-                    expires: DateTime.Now.AddHours(
+                    expires: DateTime.UtcNow.AddHours(
                         Convert.ToDouble(_configuration["Jwt:ExpireHours"])
                     ),
                     signingCredentials: credenciais
