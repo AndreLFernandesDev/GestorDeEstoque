@@ -1,6 +1,5 @@
 using GestorDeEstoque.Data;
 using GestorDeEstoque.DTOs;
-using GestorDeEstoque.Models;
 using GestorDeEstoque.Repositories;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,12 +9,10 @@ namespace GestorDeEstoque.Controllers
     [Route("/usuarios")]
     public class UsuarioController : ControllerBase
     {
-        private readonly ApplicationDbContext _context;
         private UsuarioRepository _usuarioRepository;
 
-        public UsuarioController(ApplicationDbContext context, UsuarioRepository usuarioRepository)
+        public UsuarioController(UsuarioRepository usuarioRepository)
         {
-            _context = context;
             _usuarioRepository = usuarioRepository;
         }
 
@@ -33,7 +30,7 @@ namespace GestorDeEstoque.Controllers
             {
                 var usuarioCriado = await _usuarioRepository.CriarUsuarioAsync(
                     usuario.Email,
-                    usuario.SenhaHash
+                    usuario.Senha
                 );
                 return Ok(usuarioCriado);
             }
