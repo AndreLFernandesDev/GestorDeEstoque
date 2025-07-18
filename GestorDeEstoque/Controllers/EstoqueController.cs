@@ -372,5 +372,29 @@ namespace GestorDeEstoque.Controllers
                 }
             }
         }
+
+        [HttpGet("{idEstoque}/relatorios/baixo-estoque")]
+        public async Task<ActionResult<ProdutoDTOQuantidadeMinima>> ProdutoBaixoEstoqueAsync(
+            int idEstoque,
+            [FromQuery] int limite
+        )
+        {
+            try
+            {
+                var produtoBaixoEstoque = await _produtoEstoqueRepository.ProdutoBaixoEstoqueAsync(
+                    idEstoque,
+                    limite
+                );
+                if (produtoBaixoEstoque == null)
+                {
+                    return NotFound("Nenhum produto abaixo da quantidade mínima encontrada");
+                }
+                return Ok(produtoBaixoEstoque);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
+            }
+        }
     }
 }
