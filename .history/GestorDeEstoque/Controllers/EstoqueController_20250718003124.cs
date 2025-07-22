@@ -381,15 +381,15 @@ namespace GestorDeEstoque.Controllers
         {
             try
             {
-                var produtosBaixoEstoque = await _produtoEstoqueRepository.ProdutoBaixoEstoqueAsync(
+                var produtoBaixoEstoque = await _produtoEstoqueRepository.ProdutoBaixoEstoqueAsync(
                     idEstoque,
                     limite
                 );
-                if (produtosBaixoEstoque == null || produtosBaixoEstoque.Count == 0)
+                if (produtoBaixoEstoque == null)
                 {
                     return NotFound("Nenhum produto abaixo da quantidade mínima encontrada");
                 }
-                return Ok(produtosBaixoEstoque);
+                return Ok(produtoBaixoEstoque);
             }
             catch (Exception ex)
             {

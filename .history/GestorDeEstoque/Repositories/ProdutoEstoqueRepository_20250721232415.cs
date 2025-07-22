@@ -86,6 +86,12 @@ namespace GestorDeEstoque.Repositories
                     Limite = limite,
                 })
                 .ToListAsync();
+
+            if (produtos == null)
+            {
+                throw new Exception("Nenhum produto abaixo do estoque mínimo encontrado");
+            }
+
             return produtos;
         }
     }

@@ -385,7 +385,7 @@ namespace GestorDeEstoque.Controllers
                     idEstoque,
                     limite
                 );
-                if (produtosBaixoEstoque == null || produtosBaixoEstoque.Count == 0)
+                if (produtosBaixoEstoque == null || !produtosBaixoEstoque.Any())
                 {
                     return NotFound("Nenhum produto abaixo da quantidade mínima encontrada");
                 }
