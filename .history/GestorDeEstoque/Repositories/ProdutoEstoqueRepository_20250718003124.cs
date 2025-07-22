@@ -72,7 +72,7 @@ namespace GestorDeEstoque.Repositories
             decimal limite
         )
         {
-            var produtos = await _context
+            var produto = await _context
                 .ProdutosEstoques.Where(pe => pe.EstoqueId == idEstoque && pe.Quantidade < limite)
                 .Select(pe => new ProdutoDTOQuantidadeMinima
                 {
@@ -86,7 +86,13 @@ namespace GestorDeEstoque.Repositories
                     Limite = limite,
                 })
                 .ToListAsync();
-            return produtos;
+
+            if (produto == null)
+            {
+                throw new Exception("Nenhum produto abaixo do estoque mínimo encontrado");
+            }
+
+            return produto;
         }
     }
 }

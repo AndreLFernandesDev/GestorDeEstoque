@@ -5,15 +5,15 @@ meta {
 }
 
 get {
-  url: {{URL_PADRAO}}/estoques20/relatorios/baixo-estoque?100
+  url: {{URL_PADRAO}}/estoques/20/relatorios/baixo-estoque?limite=100
   body: none
   auth: inherit
 }
 
 params:query {
-  100: 
+  limite: 100
 }
 
 headers {
-  Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJlbWFpbCIsImp0aSI6IjM2YzczNjUzLTc5ZWEtNDEyNS05YmUwLTE0N2U3NGIwZGM4YSIsImV4cCI6MTc1MjgxMzUzNiwiaXNzIjoibG9jYWxob3N0IiwiYXVkIjoibG9jYWxob3N0In0.8C13QkHb__Lfo1LJRTXKsIFoyDUJcFRzhQXYOWEarAQ
+  Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJlbWFpbCIsImp0aSI6IjZiNWE4ODI3LTdiMTYtNDc0ZC05ZGYyLTFjNTQzZGE5MDNkNCIsImV4cCI6MTc1MzE1ODMyMCwiaXNzIjoibG9jYWxob3N0IiwiYXVkIjoibG9jYWxob3N0In0.MV0XVdpVSflA-ErGs5NL7QNYDmVNh9STm-52PpeJAX8
 }
