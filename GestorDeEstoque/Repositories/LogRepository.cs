@@ -1,4 +1,5 @@
 using GestorDeEstoque.Data;
+using GestorDeEstoque.DTOs;
 using GestorDeEstoque.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -21,10 +22,25 @@ namespace GestorDeEstoque.Repositories
             int estoqueId
         )
         {
-            var log = new LogEstoque(produtoId, quantidadeAtual, estoqueId);
-            _context.LogsEstoques.Add(log);
+            var ultimoLog = await _context
+                .LogsEstoques.Where(le => le.ProdutoId == produtoId && le.EstoqueId == estoqueId)
+                .OrderByDescending(le => le.Data)
+                .FirstOrDefaultAsync();
+
+            var tipoDeMovimentacao =
+                ultimoLog == null || ultimoLog.Quantidade < quantidadeAtual
+                    ? LogEstoqueTipoDeMovimentacao.Entrada
+                    : LogEstoqueTipoDeMovimentacao.Saida;
+
+            var novoLog = new LogEstoque(produtoId, quantidadeAtual, estoqueId)
+            {
+                TipoDeMovimentacao = tipoDeMovimentacao,
+            };
+
+            _context.LogsEstoques.Add(novoLog);
             await _context.SaveChangesAsync();
-            return log;
+
+            return novoLog;
         }
     }
 }
