@@ -67,26 +67,55 @@ namespace GestorDeEstoque.Repositories
             return true;
         }
 
-        public async Task<List<ProdutoDTOQuantidadeMinima>> ObterProdutosBaixoEstoqueAsync(
-            int idEstoque,
-            decimal limite
-        )
+        public async Task<List<ProdutosObsoletosDTO>> ProdutosObsoletosAsync(int idEstoque)
         {
-            var produtos = await _context
-                .ProdutosEstoques.Where(pe => pe.EstoqueId == idEstoque && pe.Quantidade < limite)
-                .Select(pe => new ProdutoDTOQuantidadeMinima
+            var dataLimite = DateTime.UtcNow.AddMonths(-6);
+
+            var ultimasSaidas = await _context
+                .LogsEstoques.Where(log =>
+                    log.EstoqueId == idEstoque
+                    && log.TipoDeMovimentacao == LogEstoqueTipoDeMovimentacao.Saida
+                )
+                .GroupBy(log => log.ProdutoId)
+                .Select(group => new
                 {
-                    Produto = new ProdutoDTO
-                    {
-                        Nome = pe.Produto.Nome,
-                        Descricao = pe.Produto.Descricao,
-                        Preco = pe.Produto.Preco,
-                        Quantidade = pe.Quantidade,
-                    },
-                    Limite = limite,
+                    ProdutoId = group.Key,
+                    UltimaSaida = group.Max(log => log.Data),
                 })
                 .ToListAsync();
-            return produtos;
+
+            var ultimasSaidasDict = ultimasSaidas.ToDictionary(
+                u => u.ProdutoId,
+                u => u.UltimaSaida
+            );
+
+            var produtosEstoque = await _context
+                .ProdutosEstoques.Where(pe => pe.EstoqueId == idEstoque)
+                .Select(pe => new
+                {
+                    ProdutoId = pe.ProdutoId,
+                    Nome = pe.Produto.Nome,
+                    Quantidade = pe.Quantidade,
+                })
+                .ToListAsync();
+
+            var produtosObsoletos = produtosEstoque
+                .Where(pe =>
+                    !ultimasSaidasDict.ContainsKey(pe.ProdutoId)
+                    || ultimasSaidasDict[pe.ProdutoId] < dataLimite
+                )
+                .Select(pe => new ProdutosObsoletosDTO
+                {
+                    ProdutoId = pe.ProdutoId,
+                    Nome = pe.Nome,
+                    Quantidade = pe.Quantidade,
+                    UltimaSaida = ultimasSaidasDict.ContainsKey(pe.ProdutoId)
+                        ? ultimasSaidasDict[pe.ProdutoId]
+                        : null,
+                })
+                .ToList();
+
+            return produtosObsoletos;
         }
     }
 }

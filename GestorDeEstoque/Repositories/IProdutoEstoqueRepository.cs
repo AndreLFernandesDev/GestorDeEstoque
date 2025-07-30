@@ -17,9 +17,6 @@ namespace GestorDeEstoque.Repositories
         );
         public Task<bool> RemoverQuantidadeProdutoAsync(int idProduto, int idEstoque);
 
-        public Task<List<ProdutoDTOQuantidadeMinima>> ObterProdutosBaixoEstoqueAsync(
-            int idEstoque,
-            decimal limite
-        );
+        public Task<List<ProdutosObsoletosDTO>> ProdutosObsoletosAsync(int idEstoque);
     }
 }
