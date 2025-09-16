@@ -67,7 +67,7 @@ namespace GestorDeEstoque.Repositories
             return true;
         }
 
-        public async Task<List<ProdutoDTOQuantidadeMinima>> ProdutoBaixoEstoqueAsync(
+        public async Task<List<ProdutoDTOQuantidadeMinima>> ObterProdutosBaixoEstoqueAsync(
             int idEstoque,
             decimal limite
         )
