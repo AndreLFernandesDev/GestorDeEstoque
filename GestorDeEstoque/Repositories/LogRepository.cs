@@ -1,6 +1,5 @@
 using GestorDeEstoque.Controllers;
 using GestorDeEstoque.Data;
-using GestorDeEstoque.DTOs;
 using GestorDeEstoque.Models;
 using Microsoft.EntityFrameworkCore;
 
