@@ -11,6 +11,12 @@ namespace GestorDeEstoque.Models
         public virtual Produto Produto { get; set; } = null!;
         public int EstoqueId { get; set; } = estoqueId;
         public virtual Estoque Estoque { get; set; } = null!;
-        public LogEstoqueTipoDeMovimentacao TipoDeMovimentacao { get; set; }
+        public LogEstoqueTipoDeMovimentacao TipoDeMovimentacao { get; internal set; }
+
+        public enum LogEstoqueTipoDeMovimentacao
+        {
+            Entrada,
+            Saida,
+        }
     }
 }

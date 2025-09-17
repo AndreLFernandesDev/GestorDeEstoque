@@ -74,7 +74,7 @@ namespace GestorDeEstoque.Repositories
             var ultimasSaidas = await _context
                 .LogsEstoques.Where(log =>
                     log.EstoqueId == idEstoque
-                    && log.TipoDeMovimentacao == LogEstoqueTipoDeMovimentacao.Saida
+                    && log.TipoDeMovimentacao == LogEstoque.LogEstoqueTipoDeMovimentacao.Saida
                 )
                 .GroupBy(log => log.ProdutoId)
                 .Select(group => new
