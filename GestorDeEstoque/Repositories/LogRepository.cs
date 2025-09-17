@@ -1,5 +1,5 @@
+using GestorDeEstoque.Controllers;
 using GestorDeEstoque.Data;
-using GestorDeEstoque.DTOs;
 using GestorDeEstoque.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -19,18 +19,14 @@ namespace GestorDeEstoque.Repositories
         public async Task<LogEstoque> RegistrarLogEstoqueAsync(
             int produtoId,
             decimal quantidadeAtual,
+            decimal quantidadeOperacao,
             int estoqueId
         )
         {
-            var ultimoLog = await _context
-                .LogsEstoques.Where(le => le.ProdutoId == produtoId && le.EstoqueId == estoqueId)
-                .OrderByDescending(le => le.Data)
-                .FirstOrDefaultAsync();
-
             var tipoDeMovimentacao =
-                ultimoLog == null || ultimoLog.Quantidade < quantidadeAtual
-                    ? LogEstoqueTipoDeMovimentacao.Entrada
-                    : LogEstoqueTipoDeMovimentacao.Saida;
+                quantidadeOperacao > 0
+                    ? LogEstoque.LogEstoqueTipoDeMovimentacao.Entrada
+                    : LogEstoque.LogEstoqueTipoDeMovimentacao.Saida;
 
             var novoLog = new LogEstoque(produtoId, quantidadeAtual, estoqueId)
             {

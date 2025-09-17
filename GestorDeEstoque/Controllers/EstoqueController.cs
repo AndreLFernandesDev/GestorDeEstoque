@@ -231,6 +231,7 @@ namespace GestorDeEstoque.Controllers
                 await _logRepository.RegistrarLogEstoqueAsync(
                     produto.Id,
                     produtoEstoque.Quantidade,
+                    novoProdutoDTO.Quantidade,
                     idEstoque
                 );
 
@@ -314,6 +315,8 @@ namespace GestorDeEstoque.Controllers
                 {
                     return NotFound(new { mensagem = "Produto ou estoque não encontrado" });
                 }
+
+                var quantidadeAntes = produtoEstoqueExistente.Quantidade;
                 var produtoEstoque =
                     await _produtoEstoqueRepository.AtualizarQuantidadeProdutoAsync(
                         idEstoque,
@@ -322,9 +325,13 @@ namespace GestorDeEstoque.Controllers
                     );
                 await _context.SaveChangesAsync();
 
+                var quantidadeDepois = produtoEstoque.Quantidade;
+                var quantidadeOperacao = quantidadeDepois - quantidadeAntes;
+
                 await _logRepository.RegistrarLogEstoqueAsync(
                     idProduto,
                     produtoEstoque.Quantidade,
+                    quantidadeOperacao,
                     idEstoque
                 );
                 await _context.SaveChangesAsync();
