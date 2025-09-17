@@ -66,5 +66,27 @@ namespace GestorDeEstoque.Repositories
             await _context.SaveChangesAsync();
             return true;
         }
+
+        public async Task<List<ProdutoDTOQuantidadeMinima>> ObterProdutosBaixoEstoqueAsync(
+            int idEstoque,
+            decimal limite
+        )
+        {
+            var produtos = await _context
+                .ProdutosEstoques.Where(pe => pe.EstoqueId == idEstoque && pe.Quantidade < limite)
+                .Select(pe => new ProdutoDTOQuantidadeMinima
+                {
+                    Produto = new ProdutoDTO
+                    {
+                        Nome = pe.Produto.Nome,
+                        Descricao = pe.Produto.Descricao,
+                        Preco = pe.Produto.Preco,
+                        Quantidade = pe.Quantidade,
+                    },
+                    Limite = limite,
+                })
+                .ToListAsync();
+            return produtos;
+        }
     }
 }

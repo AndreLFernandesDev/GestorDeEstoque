@@ -1,0 +1,19 @@
+meta {
+  name: BuscarProdutosComBaixaEstoque
+  type: http
+  seq: 16
+}
+
+get {
+  url: {{URL_PADRAO}}/estoques/20/relatorios/baixo-estoque?limite=100
+  body: none
+  auth: inherit
+}
+
+params:query {
+  limite: 100
+}
+
+headers {
+  Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJlbWFpbCIsImp0aSI6IjZiNWE4ODI3LTdiMTYtNDc0ZC05ZGYyLTFjNTQzZGE5MDNkNCIsImV4cCI6MTc1MzE1ODMyMCwiaXNzIjoibG9jYWxob3N0IiwiYXVkIjoibG9jYWxob3N0In0.MV0XVdpVSflA-ErGs5NL7QNYDmVNh9STm-52PpeJAX8
+}
