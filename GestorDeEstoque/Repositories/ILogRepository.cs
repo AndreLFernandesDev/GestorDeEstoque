@@ -7,6 +7,7 @@ namespace GestorDeEstoque.Repositories
         public Task<LogEstoque> RegistrarLogEstoqueAsync(
             int produtoId,
             decimal quantidade,
+            decimal quantidadeOperacao,
             int idEstoque
         );
         public Task<IEnumerable<LogEstoque>> ObterLogsAsync(int idEstoque);

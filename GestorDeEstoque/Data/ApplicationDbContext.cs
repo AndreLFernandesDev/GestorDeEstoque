@@ -55,6 +55,11 @@ namespace GestorDeEstoque.Data
 
             modelBuilder.Entity<LogEstoque>().Property(l => l.EstoqueId).IsRequired();
 
+            modelBuilder
+                .Entity<LogEstoque>()
+                .Property(l => l.TipoDeMovimentacao)
+                .HasConversion<string>();
+
             //Relacionamento: LogEstoque -> Produto
             modelBuilder
                 .Entity<LogEstoque>()

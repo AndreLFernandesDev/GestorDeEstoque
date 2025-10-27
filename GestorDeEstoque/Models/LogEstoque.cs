@@ -1,3 +1,5 @@
+using GestorDeEstoque.DTOs;
+
 namespace GestorDeEstoque.Models
 {
     public class LogEstoque(int produtoId, decimal quantidade, int estoqueId)
@@ -9,5 +11,12 @@ namespace GestorDeEstoque.Models
         public virtual Produto Produto { get; set; } = null!;
         public int EstoqueId { get; set; } = estoqueId;
         public virtual Estoque Estoque { get; set; } = null!;
+        public LogEstoqueTipoDeMovimentacao TipoDeMovimentacao { get; internal set; }
+
+        public enum LogEstoqueTipoDeMovimentacao
+        {
+            Entrada,
+            Saida,
+        }
     }
 }

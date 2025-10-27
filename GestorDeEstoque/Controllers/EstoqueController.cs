@@ -231,6 +231,7 @@ namespace GestorDeEstoque.Controllers
                 await _logRepository.RegistrarLogEstoqueAsync(
                     produto.Id,
                     produtoEstoque.Quantidade,
+                    novoProdutoDTO.Quantidade,
                     idEstoque
                 );
 
@@ -314,6 +315,8 @@ namespace GestorDeEstoque.Controllers
                 {
                     return NotFound(new { mensagem = "Produto ou estoque não encontrado" });
                 }
+
+                var quantidadeAntes = produtoEstoqueExistente.Quantidade;
                 var produtoEstoque =
                     await _produtoEstoqueRepository.AtualizarQuantidadeProdutoAsync(
                         idEstoque,
@@ -322,9 +325,13 @@ namespace GestorDeEstoque.Controllers
                     );
                 await _context.SaveChangesAsync();
 
+                var quantidadeDepois = produtoEstoque.Quantidade;
+                var quantidadeOperacao = quantidadeDepois - quantidadeAntes;
+
                 await _logRepository.RegistrarLogEstoqueAsync(
                     idProduto,
                     produtoEstoque.Quantidade,
+                    quantidadeOperacao,
                     idEstoque
                 );
                 await _context.SaveChangesAsync();
@@ -373,29 +380,20 @@ namespace GestorDeEstoque.Controllers
             }
         }
 
-        [HttpGet("{idEstoque}/relatorios/baixo-estoque")]
-        public async Task<ActionResult<ProdutoDTOQuantidadeMinima>> ObterProdutoBaixoEstoqueAsync(
-            int idEstoque,
-            [FromQuery] int limite
+        [HttpGet("{idEstoque}/relatorios/obsoletos")]
+        public async Task<ActionResult<List<ProdutosObsoletosDTO>>> ObterProdutosObsoletos(
+            int idEstoque
         )
         {
-            try
+            var produtosObsoletos = await _produtoEstoqueRepository.ProdutosObsoletosAsync(
+                idEstoque
+            );
+
+            if (produtosObsoletos == null || !produtosObsoletos.Any())
             {
-                var produtosBaixoEstoque =
-                    await _produtoEstoqueRepository.ObterProdutosBaixoEstoqueAsync(
-                        idEstoque,
-                        limite
-                    );
-                if (produtosBaixoEstoque == null || produtosBaixoEstoque.Count == 0)
-                {
-                    return NotFound("Nenhum produto abaixo da quantidade mínima encontrada");
-                }
-                return Ok(produtosBaixoEstoque);
+                return NotFound("Nenhum produto obsoleto encontrado");
             }
-            catch (Exception ex)
-            {
-                return BadRequest(ex);
-            }
+            return Ok(produtosObsoletos);
         }
     }
 }
